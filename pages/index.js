@@ -1,8 +1,22 @@
+import Head from 'next/head'
+import styles from '../styles/Home.module.css'
+import Header from '../components/Header'
+
 export default function Home() {
     return (
-        <div>a</div>
-    /*
-    <div className={styles.container}>
+        <div className={styles.container}>
+            <Head>
+                <title>Cavaquinho Hero</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+
+            <main className={styles.main}>
+                <Header />
+              Menu....<br />
+
+            </main>
+        </div>
+    /* <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -59,7 +73,6 @@ export default function Home() {
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
       </footer>
-    </div>
-    */
+    </div> */
     )
 }

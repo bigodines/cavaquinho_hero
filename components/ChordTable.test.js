@@ -1,13 +1,24 @@
 /**
  * @jest-environment jsdom
  */
-import { render, screen } from '@testing-library/react'
-import App from '../pages/index'
-describe('App', () => {
-    it('renders without crashing', () => {
-        render(<App />)
-        expect(
-            screen.getByRole('heading', { name: 'Welcome to Next.js!' })
-        ).toBeInTheDocument()
-    })
-})
+describe('ChordTable', () => {
+    it('can run tests', () => {
+        expect(true).toBe(true);
+    });
+
+    it('Uses enharmonic notes contained in the scale for tetrads', () => {
+        // in the D scale, the seventh is Cb and not B
+        // (even tho they sound the same)
+        let actual = chords.DiminishedTetrad('D')
+        expect(actual.first).toBe('D')
+        expect(actual.third).toBe('F')
+        expect(actual.fifth).toBe('Ab')
+        expect(actual.sevent).toBe('Cb')
+    
+        actual = chords.MinorSevenMajorTetrad('G')
+        expect(actual.first).toBe('G')
+        expect(actual.third).toBe('Bb')
+        expect(actual.fifth).toBe('D')
+        expect(actual.sevent).toBe('F#')
+    });
+});
