@@ -7,33 +7,40 @@ import PeopleIcon from '@material-ui/icons/People'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
+import ActiveLink from './ActiveLink'
 
 export default function Menu() {
     return (
         <div>
             <List>
-                <ListItem button>
-                    <ListItemIcon>
-                        <DashboardIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Dashboard" />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon>
-                        <ShoppingCartIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Orders" />
-                </ListItem>
+                <ActiveLink activeClassName="active" href="/">
+                    <ListItem button>
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Home" />
+                    </ListItem>
+                </ActiveLink>
+                <ActiveLink activeClassName="active" href="/chords">
+                    <ListItem button>
+                        <ListItemIcon>
+                            <ShoppingCartIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Acordes" />
+                    </ListItem>
+                </ActiveLink>
             </List>
 
             <Divider />
             <List>
-                <ListItem button>
-                    <ListItemIcon>
-                        <PeopleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="About" />
-                </ListItem>
+                <ActiveLink activeClassName="active" href="/about">
+                    <ListItem button>
+                        <ListItemIcon>
+                            <PeopleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="About" />
+                    </ListItem>
+                </ActiveLink>
             </List>
         </div>
     )
