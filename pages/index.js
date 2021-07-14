@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex'
     },
     toolbar: {
-        paddingRight: 240 // keep right padding when drawer closed
+        paddingRight: 24 // keep right padding when drawer closed
     },
     toolbarIcon: {
         display: 'flex',
@@ -74,7 +74,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'none'
     },
     title: {
-        flexGrow: 1
+        flexGrow: 1,
+        paddingRight: 240
     },
     drawerPaper: {
         position: 'relative',
@@ -155,7 +156,7 @@ export default function Home() {
                         noWrap
                         className={classes.title}
                     >
-            Cavaquinho Hero!
+                        Cavaquinho Hero!
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
