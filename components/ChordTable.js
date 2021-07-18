@@ -17,14 +17,13 @@ export default function ChordTable() {
     const [note, setNote] = React.useState('C')
 
     const handleNoteChange = (event) => {
-        setNote('E')
         console.log('worked')
     }
 
     return (
         <div className={classes.root}>
             <form noValidate autoComplete="off">
-                <TextField id="outlined-basic" label="Fundamental" variant="standard">{note}</TextField>
+                <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} />
                 <Button variant="contained" onClick={handleNoteChange}>OK</Button>
             </form>
         </div>
