@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Header from '../components/Theme'
-import Menu from '../components/Menu'
+import Header from './Theme'
+import Menu from './Menu'
 
 import React, { useState, Children } from 'react'
 import clsx from 'clsx'
@@ -180,7 +180,6 @@ export default function Theme({ children, activeClassName, ...props }) {
                     </IconButton>
                 </div>
                 <Divider />
-                {/* replace listItems with menu items */}
                 <Menu />
             </Drawer>
             <main className={classes.content}>
