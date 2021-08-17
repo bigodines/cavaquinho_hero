@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer
 
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
+import * as chords from '../lib/chords'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -10,18 +11,52 @@ const useStyles = makeStyles((theme) => ({
             width: '25ch',
             flexgrow: 1
         }
+    },
+    table: {
+        minWidth: 650
     }
 }))
+
+function generateChords(n) {
+    if (!n || n.length < 1) {
+        // TODO: error
+        // return res.render('tetrads', { layout: 'index' })
+    }
+
+    n = n[0].toUpperCase() + n.substring(1)
+
+    const ret = {
+        '': chords.MajorTriad(n),
+        m: chords.MinorTriad(n),
+        '+': chords.AugmentedTriad(n),
+        '°': chords.DiminishedTriad(n),
+        7: chords.SevenTetrad(n),
+        '7M': chords.SevenMajorTetrad(n),
+        m7: chords.minorSevenTetrad(n),
+        'm7+': chords.MinorSevenMajorTetrad(n),
+        '7(#5)': chords.AugmentedSeventhTetrad(n),
+        '7+(#5)': chords.AugmentedMajorSeventhTetrad(n),
+        Ø: chords.HalfDiminishedTetrad(n),
+        o: chords.DiminishedTetrad(n),
+        '7(b5)': chords.SevenFlatFiveTetrad(n),
+        6: chords.SixthTetrad(n),
+        m6: chords.MinorSixthTetrad(n)
+    }
+
+    return ret
+}
 
 export default function ChordTable() {
     const classes = useStyles()
     const [note, setNote] = useState('C')
     const [showTable, setShowTable] = useState(false)
 
-    const chords = {}
-
     const handleNoteChange = (event) => {
         setNote(event.target.value)
+        const chords = generateChords(note)
+
+        console.log(chords)
+
         setShowTable(true)
     }
 
@@ -41,7 +76,7 @@ export default function ChordTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {/* {rows.map((row) => (
                             <TableRow key={row.name}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
@@ -51,7 +86,7 @@ export default function ChordTable() {
                                 <TableCell align="right">{row.carbs}</TableCell>
                                 <TableCell align="right">{row.protein}</TableCell>
                             </TableRow>
-                        ))}
+                        ))} */}
                     </TableBody>
                 </Table>
             </TableContainer>}
