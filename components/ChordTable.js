@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
+import { sizeWidth } from '@material-ui/system'
 import React, { useState } from 'react'
 import * as chords from '../lib/chords'
 
@@ -13,12 +14,17 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     table: {
-        minWidth: 650
+        minWidth: 650,
+        width: 1200
     }
 }))
 
 function generateChords(n) {
+    console.log('debigo')
+    console.log(n)
+
     if (!n || n.length < 1) {
+        return null
         // TODO: error
         // return res.render('tetrads', { layout: 'index' })
     }
@@ -48,23 +54,52 @@ function generateChords(n) {
 
 export default function ChordTable() {
     const classes = useStyles()
-    const [note, setNote] = useState('C')
+    const [note, setNote] = useState('')
     const [showTable, setShowTable] = useState(false)
+    const [chords, setChords] = useState({})
 
-    const handleNoteChange = (event) => {
-        setNote(event.target.value)
-        const chords = generateChords(note)
+    const renderChords = () => {
+        console.log(Object.keys(chords))
+        const cc = Object.keys(chords).map((key, i) => {
+            console.log(key)
+            return (<TableRow key={key}>
+                <TableCell component="th" scope="row">
+                    {note + key}
+                </TableCell>
+                <TableCell align="right">{Object.values(chords[key]).join(',')}</TableCell>
+                <TableCell align="right"></TableCell>
+            </TableRow>)
+        })
+
+        console.log(cc)
+        return (<TableBody>
+            {cc}
+        </TableBody>
+        )
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        const c = generateChords(note)
 
         console.log(chords)
 
         setShowTable(true)
+        setChords(c)
+    }
+
+    const handleNoteChange = (event) => {
+        setNote(event.target.value)
+
+        console.log(note)
     }
 
     return (
         <div className={classes.root}>
-            <form noValidate autoComplete="off">
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} onChange={handleNoteChange} />
-                <Button variant="contained">OK</Button>
+                <Button type="submit" variant="contained">OK</Button>
             </form>
             { showTable && <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
@@ -75,19 +110,12 @@ export default function ChordTable() {
                             <TableCell align="right">Extras</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {/* {rows.map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell>
-                            </TableRow>
+                    { renderChords() }
+
+                    {/* {rows.map((row) => (
+
                         ))} */}
-                    </TableBody>
+
                 </Table>
             </TableContainer>}
         </div>
