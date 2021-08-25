@@ -58,26 +58,6 @@ export default function ChordTable() {
     const [showTable, setShowTable] = useState(false)
     const [chords, setChords] = useState({})
 
-    const renderChords = () => {
-        console.log(Object.keys(chords))
-        const cc = Object.keys(chords).map((key, i) => {
-            console.log(key)
-            return (<TableRow key={key}>
-                <TableCell component="th" scope="row">
-                    {note + key}
-                </TableCell>
-                <TableCell align="right">{Object.values(chords[key]).join(',')}</TableCell>
-                <TableCell align="right"></TableCell>
-            </TableRow>)
-        })
-
-        console.log(cc)
-        return (<TableBody>
-            {cc}
-        </TableBody>
-        )
-    }
-
     const handleSubmit = (event) => {
         event.preventDefault()
 
@@ -93,6 +73,23 @@ export default function ChordTable() {
         setNote(event.target.value)
 
         console.log(note)
+    }
+
+    const renderChords = () => {
+        const cc = Object.keys(chords).map((key, i) => {
+            return (<TableRow key={key}>
+                <TableCell component="th" scope="row">
+                    {note + key}
+                </TableCell>
+                <TableCell align="right">{Object.values(chords[key]).join(',')}</TableCell>
+                <TableCell align="right"></TableCell>
+            </TableRow>)
+        })
+
+        return (<TableBody>
+            {cc}
+        </TableBody>
+        )
     }
 
     return (
@@ -111,11 +108,6 @@ export default function ChordTable() {
                         </TableRow>
                     </TableHead>
                     { renderChords() }
-
-                    {/* {rows.map((row) => (
-
-                        ))} */}
-
                 </Table>
             </TableContainer>}
         </div>
