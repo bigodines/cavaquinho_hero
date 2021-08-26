@@ -1,10 +1,11 @@
-import Theme from '../components/Theme'
+import Header from '../components/Header'
 import ChordTable from '../components/ChordTable'
 
 export default function Home() {
     return (
-        <Theme>
+        <div>
+            <Header />
             <ChordTable></ChordTable>
-        </Theme>
+        </div>
     )
 }
