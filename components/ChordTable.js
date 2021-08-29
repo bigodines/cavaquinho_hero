@@ -5,24 +5,7 @@ import { sizeWidth } from '@material-ui/system'
 import React, { useState } from 'react'
 import * as chords from '../lib/chords'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-            flexgrow: 1
-        }
-    },
-    table: {
-        minWidth: 650,
-        width: 1200
-    }
-}))
-
 function generateChords(n) {
-    console.log('debigo')
-    console.log(n)
-
     if (!n || n.length < 1) {
         return null
         // TODO: error
@@ -51,6 +34,21 @@ function generateChords(n) {
 
     return ret
 }
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+            flexgrow: 1
+        }
+    },
+    table: {
+        minWidth: 650,
+        width: 1200
+    }
+}))
+
 
 export default function ChordTable() {
     const classes = useStyles()
@@ -81,7 +79,7 @@ export default function ChordTable() {
                 <TableCell component="th" scope="row">
                     {note + key}
                 </TableCell>
-                <TableCell align="right">{Object.values(chords[key]).join(',')}</TableCell>
+                <TableCell align="right">{Object.values(chords[key]).join(', ')}</TableCell>
                 <TableCell align="right"></TableCell>
             </TableRow>)
         })
@@ -93,8 +91,8 @@ export default function ChordTable() {
     }
 
     return (
-        <div className={classes.root}>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <div>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.root}>
                 <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>
