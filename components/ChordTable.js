@@ -5,20 +5,6 @@ import { sizeWidth } from '@material-ui/system'
 import React, { useState } from 'react'
 import * as chords from '../lib/chords'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-            flexgrow: 1
-        }
-    },
-    table: {
-        minWidth: 650,
-        width: 1200
-    }
-}))
-
 function generateChords(n) {
     if (!n || n.length < 1) {
         return null
@@ -48,6 +34,21 @@ function generateChords(n) {
 
     return ret
 }
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+            flexgrow: 1
+        }
+    },
+    table: {
+        minWidth: 650,
+        width: 1200
+    }
+}))
+
 
 export default function ChordTable() {
     const classes = useStyles()
