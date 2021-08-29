@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function generateChords(n) {
-    console.log('debigo')
-    console.log(n)
-
     if (!n || n.length < 1) {
         return null
         // TODO: error
@@ -81,7 +78,7 @@ export default function ChordTable() {
                 <TableCell component="th" scope="row">
                     {note + key}
                 </TableCell>
-                <TableCell align="right">{Object.values(chords[key]).join(',')}</TableCell>
+                <TableCell align="right">{Object.values(chords[key]).join(', ')}</TableCell>
                 <TableCell align="right"></TableCell>
             </TableRow>)
         })
@@ -93,8 +90,8 @@ export default function ChordTable() {
     }
 
     return (
-        <div className={classes.root}>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <div>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.root}>
                 <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>

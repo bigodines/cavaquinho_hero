@@ -131,7 +131,7 @@ import ActiveLink from "./ActiveLink";
     const getDrawerChoices = () => {
       return headersData.map(({ label, href }) => {
         return (
-          <ActiveLink activeClassName="active" href={href}>
+          <ActiveLink activeClassName="active" href={href} key={label}>
             <MenuItem>{label}</MenuItem>
           </ActiveLink>
         );
@@ -148,6 +148,8 @@ import ActiveLink from "./ActiveLink";
       return headersData.map(({ label, href }) => {
         return (
           <ActiveLink href={href}
+              key={label}
+              activeClassName="active"
               className={menuButton}>
             <dv>{label}</dv>
           </ActiveLink>
@@ -156,11 +158,9 @@ import ActiveLink from "./ActiveLink";
     };
   
     return (
-      <header>
-        <AppBar className={header}>
+        <AppBar className={header} position="sticky">
           {mobileView ? displayMobile() : displayDesktop()}
         </AppBar>
-      </header>
     );
   }
   
