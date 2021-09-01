@@ -26,8 +26,8 @@ export default function Home() {
     return (
         <div>
             <Header />
-            <Container maxWidth="sm">
-                <Grid container spacing={1} className={classes.container}>
+            <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={4}>
                     <div className={classes.toolbar}>
                     <Grid item xs={12}>
                         <ChordTable />

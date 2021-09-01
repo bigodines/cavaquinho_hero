@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
         width: 1200
+    },
+    noteForm: {
+        textAlign: "center",
     }
 }))
 
@@ -92,7 +95,7 @@ export default function ChordTable() {
 
     return (
         <div>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.root}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.noteForm}>
                 <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>
