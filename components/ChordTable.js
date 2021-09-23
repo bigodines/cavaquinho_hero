@@ -7,7 +7,7 @@ import * as chords from '../lib/chords'
 
 function generateChords(n) {
     if (!n || n.length < 1) {
-        return null
+        return {}
         // TODO: error
         // return res.render('tetrads', { layout: 'index' })
     }
@@ -59,21 +59,19 @@ export default function ChordTable() {
     const [showTable, setShowTable] = useState(false)
     const [chords, setChords] = useState({})
 
-    const handleSubmit = (event) => {
-        event.preventDefault()
-
-        const c = generateChords(note)
-
-        console.log(chords)
-
-        setShowTable(true)
-        setChords(c)
+    const handleNoteChange = (event) => {
+        setNote(event.target.value);
     }
 
-    const handleNoteChange = (event) => {
-        setNote(event.target.value)
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        //setNote(event.target.rootNote.value)
+        
+        const c = generateChords(note)
 
-        console.log(note)
+        setChords(c)
+        setShowTable(true)
+        console.log(chords)
     }
 
     const renderChords = () => {
@@ -96,7 +94,7 @@ export default function ChordTable() {
     return (
         <div>
             <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.noteForm}>
-                <TextField id="outlined-basic" label="Fundamental" variant="standard" value={note} onChange={handleNoteChange} />
+                <TextField id="outlined-basic" label="Fundamental" variant="standard" name="rootNote" onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>
             { showTable && <TableContainer component={Paper}>
