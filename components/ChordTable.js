@@ -65,7 +65,6 @@ export default function ChordTable() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        //setNote(event.target.rootNote.value)
         
         const c = generateChords(note)
 
