@@ -1,24 +1,17 @@
 /**
  * @jest-environment jsdom
  */
+import React from 'react'
+import renderer from 'react-test-renderer'
+import ChordTable from './ChordTable'
+
 describe('ChordTable', () => {
     it('can run tests', () => {
-        expect(true).toBe(true);
-    });
+        expect(true).toBe(true)
+    })
 
-    it('Uses enharmonic notes contained in the scale for tetrads', () => {
-        // in the D scale, the seventh is Cb and not B
-        // (even tho they sound the same)
-        let actual = chords.DiminishedTetrad('D')
-        expect(actual.first).toBe('D')
-        expect(actual.third).toBe('F')
-        expect(actual.fifth).toBe('Ab')
-        expect(actual.sevent).toBe('Cb')
-    
-        actual = chords.MinorSevenMajorTetrad('G')
-        expect(actual.first).toBe('G')
-        expect(actual.third).toBe('Bb')
-        expect(actual.fifth).toBe('D')
-        expect(actual.sevent).toBe('F#')
-    });
-});
+    it('Renders empty state', () => {
+        const tree = renderer.create(<ChordTable />).toJSON()
+        expect(tree).toMatchSnapshot()
+    })
+})
