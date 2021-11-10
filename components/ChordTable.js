@@ -48,10 +48,9 @@ const useStyles = makeStyles((theme) => ({
         width: 1200
     },
     noteForm: {
-        textAlign: "center",
+        textAlign: 'center'
     }
 }))
-
 
 export default function ChordTable() {
     const classes = useStyles()
@@ -60,12 +59,12 @@ export default function ChordTable() {
     const [chords, setChords] = useState({})
 
     const handleNoteChange = (event) => {
-        setNote(event.target.value);
+        setNote(event.target.value)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        
+
         const c = generateChords(note)
 
         setChords(c)

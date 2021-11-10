@@ -2,6 +2,7 @@ import Header from '../components/Header'
 import ChordTable from '../components/ChordTable'
 import React from 'react'
 import { Container, Grid, makeStyles } from '@material-ui/core'
+import HarmonicField from '../components/HarmonicField'
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-export default function HarmonicField() {
+export default function Tonality() {
     const classes = useStyles()
 
     return (
@@ -29,7 +30,7 @@ export default function HarmonicField() {
                 <Grid container spacing={4}>
                     <div className={classes.toolbar}>
                         <Grid item xs={12}>
-                            <ChordTable />
+                            <HarmonicField />
                         </Grid>
                     </div>
                 </Grid>
