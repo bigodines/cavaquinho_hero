@@ -1,5 +1,5 @@
-import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 
 import { MajorDiatonicScale } from '../lib/tonality'

@@ -2,16 +2,17 @@ import {
     AppBar,
     Toolbar,
     Typography,
-    makeStyles,
     Button,
     IconButton,
     Drawer,
     Link,
     MenuItem
-} from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
+} from '@mui/core'
+import { makeStyles } from '@mui/styles'
+import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState, useEffect } from 'react'
 import ActiveLink from './ActiveLink'
+import { styled } from '@mui/system'
 
 const headersData = [
     {
@@ -28,10 +29,8 @@ const headersData = [
     }
 ]
 
-const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
-
 const useStyles = makeStyles(() => ({
-    header: {
+    hh: {
         backgroundColor: '#400CCC',
         paddingRight: '79px',
         paddingLeft: '118px',
@@ -61,7 +60,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export default function Header() {
-    const { header, logo, menuButton, toolbar, drawerContainer } = useStyles()
+    const { hh, logo, menuButton, toolbar, drawerContainer } = useStyles()
 
     const [state, setState] = useState({
         mobileView: false,
@@ -160,9 +159,10 @@ export default function Header() {
     }
 
     return (
-        <AppBar className={header} position="sticky">
-            {mobileView ? displayMobile() : displayDesktop()}
-        </AppBar>
-        <Offset />
+        <React.Fragment>
+            <AppBar position="sticky">
+                {mobileView ? displayMobile() : displayDesktop()}
+            </AppBar>
+        </React.Fragment>
     )
 }

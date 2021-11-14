@@ -1,7 +1,7 @@
-import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@mui/material'
 
-import { makeStyles } from '@material-ui/core/styles'
-import { sizeWidth } from '@material-ui/system'
+import { makeStyles } from '@mui/styles'
+import { sizeWidth } from '@mui/system'
 import React, { useState } from 'react'
 import * as chords from '../lib/chords'
 

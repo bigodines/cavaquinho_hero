@@ -1,7 +1,8 @@
 import Header from '../components/Header'
 import ChordTable from '../components/ChordTable'
 import React from 'react'
-import { Container, Grid, makeStyles } from '@material-ui/core'
+import { Container, Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles((theme) => ({
     content: {
