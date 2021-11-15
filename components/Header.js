@@ -7,7 +7,7 @@ import {
     Drawer,
     Link,
     MenuItem
-} from '@mui/core'
+} from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState, useEffect } from 'react'
