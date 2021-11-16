@@ -59,6 +59,8 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+const Offset = styled('div')(({ theme }) => theme.mixins.toolbar)
+
 export default function Header() {
     const { hh, logo, menuButton, toolbar, drawerContainer } = useStyles()
 
@@ -163,6 +165,7 @@ export default function Header() {
             <AppBar position="sticky">
                 {mobileView ? displayMobile() : displayDesktop()}
             </AppBar>
+            <Offset />
         </React.Fragment>
     )
 }
