@@ -13,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState, useEffect } from 'react'
 import ActiveLink from './ActiveLink'
 import { styled } from '@mui/system'
+import styles from './Header.module.css'
 
 const headersData = [
     {
@@ -29,41 +30,10 @@ const headersData = [
     }
 ]
 
-const useStyles = makeStyles(() => ({
-    hh: {
-        backgroundColor: '#400CCC',
-        paddingRight: '79px',
-        paddingLeft: '118px',
-        '@media (max-width: 900px)': {
-            paddingLeft: 10
-        }
-    },
-    logo: {
-        fontFamily: 'Work Sans, sans-serif',
-        fontWeight: 600,
-        color: '#FFFEFE',
-        textAlign: 'left'
-    },
-    menuButton: {
-        fontFamily: 'Open Sans, sans-serif',
-        fontWeight: 700,
-        size: '18px',
-        marginLeft: '38px'
-    },
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'space-between'
-    },
-    drawerContainer: {
-        padding: '20px 30px'
-    }
-}))
-
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar)
 
 export default function Header() {
-    const { hh, logo, menuButton, toolbar, drawerContainer } = useStyles()
-
+    
     const [state, setState] = useState({
         mobileView: false,
         drawerOpen: false
@@ -89,7 +59,7 @@ export default function Header() {
 
     const displayDesktop = () => {
         return (
-            <Toolbar className={toolbar}>
+            <Toolbar className={styles.toolbar}>
                 {chLogo}
                 <div>{getMenuButtons()}</div>
             </Toolbar>
@@ -123,7 +93,7 @@ export default function Header() {
                         onClose: handleDrawerClose
                     }}
                 >
-                    <div className={drawerContainer}>{getDrawerChoices()}</div>
+                    <div className={styles.drawerContainer}>{getDrawerChoices()}</div>
                 </Drawer>
 
                 <div>{chLogo}</div>
@@ -142,7 +112,7 @@ export default function Header() {
     }
 
     const chLogo = (
-        <Typography variant="h6" component="h1" className={logo}>
+        <Typography variant="h6" component="h1" className={styles.logo}>
         Cavaquinho Hero
         </Typography>
     )
@@ -153,7 +123,7 @@ export default function Header() {
                 <ActiveLink href={href}
                     key={label}
                     activeClassName="active"
-                    className={menuButton}>
+                    className={styles.menuButton}>
                     <dv>{label}</dv>
                 </ActiveLink>
             )
