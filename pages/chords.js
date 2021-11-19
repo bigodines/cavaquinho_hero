@@ -1,4 +1,4 @@
-import Header from '../components/Header'
+import Header from '../components/Header/Header'
 import ChordTable from '../components/ChordTable'
 import React from 'react'
 import { Container, Grid } from '@mui/material'

@@ -7,7 +7,11 @@ module.exports = {
         jest: true
     },
     extends: [
-        'standard'
+        'standard',
+        'plugin:react/recommended'
+    ],
+    plugins: [
+        'react'
     ],
     parserOptions: {
         ecmaVersion: 12

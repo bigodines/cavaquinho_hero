@@ -8,12 +8,11 @@ import {
     Link,
     MenuItem
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState, useEffect } from 'react'
-import ActiveLink from './ActiveLink'
+import ActiveLink from '../ActiveLink'
 import { styled } from '@mui/system'
-import styles from './Header.module.css'
+import styles from './Header.module.scss'
 
 const headersData = [
     {
@@ -124,18 +123,18 @@ export default function Header() {
                     key={label}
                     activeClassName="active"
                     className={styles.menuButton}>
-                    <dv>{label}</dv>
+                    <Button variant="outlined" color="secondary">{label}!</Button>
                 </ActiveLink>
             )
         })
     }
 
     return (
-        <React.Fragment>
-            <AppBar position="sticky">
+        <>
+            <AppBar position="sticky" className={styles.hh}>
                 {mobileView ? displayMobile() : displayDesktop()}
             </AppBar>
             <Offset />
-        </React.Fragment>
+        </>
     )
 }
