@@ -6,7 +6,7 @@ import HarmonicField from '../components/HarmonicField'
 export default function Tonality() {
 
     return (
-        <div>
+        <>
             <Header />
             <Container maxWidth="lg" className="container">
                 <Grid container spacing={4}>
@@ -17,6 +17,6 @@ export default function Tonality() {
                     </div>
                 </Grid>
             </Container>
-        </div>
+        </>
     )
 }
