@@ -5,13 +5,6 @@ import React, { useState } from 'react'
 import { MajorDiatonicScale } from '../lib/tonality'
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-            flexgrow: 1
-        }
-    },
     table: {
         minWidth: 650,
         width: 1200
