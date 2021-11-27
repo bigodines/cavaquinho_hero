@@ -1,21 +1,12 @@
 import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 
-import { MajorDiatonicScale } from '../lib/tonality'
+import styles from './HarmonicField.module.scss'
 
-const useStyles = makeStyles((theme) => ({
-    table: {
-        minWidth: 650,
-        width: 1200
-    },
-    noteForm: {
-        textAlign: 'center'
-    }
-}))
+
+import { MajorDiatonicScale } from '../../lib/tonality'
 
 export default function HarmonicField() {
-    const classes = useStyles()
     const [note, setNote] = useState('')
     const [showTable, setShowTable] = useState(false)
     const [chords, setChords] = useState([])
@@ -39,12 +30,12 @@ export default function HarmonicField() {
 
     return (
         <div>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.noteForm}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit} className={styles.noteForm}>
                 <TextField id="outlined-basic" label="Tonalidade" variant="standard" name="rootNote" onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>
             { showTable && <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
+                <Table className={styles.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell align="center">I</TableCell>

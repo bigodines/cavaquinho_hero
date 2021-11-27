@@ -1,7 +1,7 @@
 import Header from '../components/Header/Header'
 import React from 'react'
 import { Container, Grid } from '@mui/material'
-import HarmonicField from '../components/HarmonicField'
+import HarmonicField from '../components/HarmonicField/HarmonicField'
 
 export default function Tonality() {
 
