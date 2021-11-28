@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import styles from './HarmonicField.module.scss'
 
 
-import { MajorDiatonicScale } from '../../lib/tonality'
+import { MajorDiatonicScale, DominantChord } from '../../lib/tonality'
 
 export default function HarmonicField() {
     const [note, setNote] = useState('')
@@ -53,6 +53,12 @@ export default function HarmonicField() {
                                 return (<TableCell align="center" key={v}>{v}</TableCell>)
                             })}
 
+                        </TableRow>
+                        <TableRow key="dominant_seventh">
+                            { chords.map((v) => {
+                                if (v.indexOf('m7b5')) return null;
+                                return (<TableCell align="center" key={"dom_"+v}>{DominantChord(v)}</TableCell> )
+                            })}
                         </TableRow>
                     </TableBody>
                 </Table>
