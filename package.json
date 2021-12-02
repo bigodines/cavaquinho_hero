@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint ./components/** ./pages/** -c .eslintrc.js --ext js,jsx",
     "lint-fix": "eslint ./components/** ./pages/** -c .eslintrc.js --fix --ext js,jsx",
-    "test": "jest"
+    "test": "jest",
+    "snap-fix": "jest -u" 
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",
@@ -34,6 +35,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^5.1.1",
+    "eslint-plugin-react": "^7.27.1",
     "jest": "^27.3.1",
     "prettier": "^2.5.0",
     "react-test-renderer": "^17.0.2"

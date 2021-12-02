@@ -26,6 +26,7 @@ export default function HarmonicField() {
 
         if (diatonicScale?.length !== 7) {
             console.error('invalid scale')
+            return
         }
         setChords(diatonicScale)
         setShowTable(true)
@@ -36,7 +37,7 @@ export default function HarmonicField() {
     return (
         <div>
             <form noValidate autoComplete="off" onSubmit={handleSubmit} className={styles.noteForm}>
-                <TextField id="outlined-basic" label="Tonalidade" variant="standard" name="rootNote" onChange={handleNoteChange} />
+                <TextField id="outlined-basic" label="Nota fundamental" variant="standard" name="rootNote" onChange={handleNoteChange} />
                 <Button type="submit" variant="contained">OK</Button>
             </form>
             { showTable && <TableContainer component={Paper}>
