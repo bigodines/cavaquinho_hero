@@ -36,13 +36,6 @@ function generateChords(n) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
-            flexgrow: 1
-        }
-    },
     table: {
         minWidth: 650,
         width: 1200
