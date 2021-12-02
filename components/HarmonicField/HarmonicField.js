@@ -43,6 +43,7 @@ export default function HarmonicField() {
                 <Table className={styles.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
+                            <TableCell></TableCell>
                             <TableCell align="center">I</TableCell>
                             <TableCell align="center">II</TableCell>
                             <TableCell align="center">III</TableCell>
@@ -54,13 +55,23 @@ export default function HarmonicField() {
                     </TableHead>
                     <TableBody>
                         <TableRow key="diatonic">
+                            <TableCell>Acordes Diatônicos</TableCell>
                             { chords.map((v) => {
                                 return (<TableCell align="center" key={v}>{v}</TableCell>)
                             })}
                         </TableRow>
                         <TableRow>
+                            <TableCell>Dominantes</TableCell>
                             { chords.map((v) => {
                                 const rowid = "V_" + v
+                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />);
+                                return (<TableCell align="center" key={rowid}>{DominantChord(v)}</TableCell>)
+                            })}
+                        </TableRow>
+                        <TableRow key="II_V">
+                            <TableCell>II Cadencial</TableCell>
+                            { chords.map((v) => {
+                                const rowid = "II_" + v
                                 if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />);
                                 return (<TableCell align="center" key={rowid}>{DominantChord(v)}</TableCell>)
                             })}
