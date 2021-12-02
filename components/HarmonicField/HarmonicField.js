@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer, Button, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styles from './HarmonicField.module.scss'
 
@@ -17,7 +17,11 @@ export default function HarmonicField() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
+    }
 
+    useEffect(() => { 
+        if (!note) return;
+        
         const diatonicScale = MajorDiatonicScale(note)
 
         if (diatonicScale?.length !== 7) {
@@ -25,8 +29,9 @@ export default function HarmonicField() {
         }
         setChords(diatonicScale)
         setShowTable(true)
-        console.log(chords)
-    }
+        
+    }, [note])
+
 
     return (
         <div>
@@ -52,12 +57,12 @@ export default function HarmonicField() {
                             { chords.map((v) => {
                                 return (<TableCell align="center" key={v}>{v}</TableCell>)
                             })}
-
                         </TableRow>
-                        <TableRow key="dominant_seventh">
+                        <TableRow>
                             { chords.map((v) => {
-                                if (v.indexOf('m7b5')) return null;
-                                return (<TableCell align="center" key={"dom_"+v}>{DominantChord(v)}</TableCell> )
+                                const rowid = "V_" + v
+                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />);
+                                return (<TableCell align="center" key={rowid}>{DominantChord(v)}</TableCell>)
                             })}
                         </TableRow>
                     </TableBody>
