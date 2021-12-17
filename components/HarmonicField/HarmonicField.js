@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 
 import styles from './HarmonicField.module.scss'
 
-
 import { MajorDiatonicScale, DominantChord } from '../../lib/tonality'
 
 export default function HarmonicField() {
@@ -19,9 +18,9 @@ export default function HarmonicField() {
         event.preventDefault()
     }
 
-    useEffect(() => { 
-        if (!note) return;
-        
+    useEffect(() => {
+        if (!note) return
+
         const diatonicScale = MajorDiatonicScale(note)
 
         if (diatonicScale?.length !== 7) {
@@ -30,9 +29,7 @@ export default function HarmonicField() {
         }
         setChords(diatonicScale)
         setShowTable(true)
-        
     }, [note])
-
 
     return (
         <div>
@@ -64,16 +61,16 @@ export default function HarmonicField() {
                         <TableRow>
                             <TableCell>Dominantes</TableCell>
                             { chords.map((v) => {
-                                const rowid = "V_" + v
-                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />);
+                                const rowid = 'V_' + v
+                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />)
                                 return (<TableCell align="center" key={rowid}>{DominantChord(v)}</TableCell>)
                             })}
                         </TableRow>
                         <TableRow key="II_V">
                             <TableCell>II Cadencial</TableCell>
                             { chords.map((v) => {
-                                const rowid = "II_" + v
-                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />);
+                                const rowid = 'II_' + v
+                                if (v.indexOf('m7b5') >= 0) return (<TableCell key={rowid} />)
                                 return (<TableCell align="center" key={rowid}>{DominantChord(v)}</TableCell>)
                             })}
                         </TableRow>
