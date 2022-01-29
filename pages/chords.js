@@ -4,7 +4,6 @@ import React from 'react'
 import { Container, Grid } from '@mui/material'
 
 export default function Chords() {
-
     return (
         <>
             <Header />

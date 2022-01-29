@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableRow, TableHead, Paper, TableContainer
 
 import { makeStyles } from '@mui/styles'
 import { sizeWidth } from '@mui/system'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import * as chords from '../lib/chords'
 
@@ -62,17 +63,18 @@ export default function ChordTable() {
 
         setChords(c)
         setShowTable(true)
-        console.log(chords)
     }
 
     const renderChords = () => {
         const cc = Object.keys(chords).map((key, i) => {
+            const viz = '/chord/' + Object.values(chords[key]).join('-')
+
             return (<TableRow key={key}>
                 <TableCell component="th" scope="row">
                     {note + key}
                 </TableCell>
                 <TableCell align="right">{Object.values(chords[key]).join(', ')}</TableCell>
-                <TableCell align="right"></TableCell>
+                <TableCell align="right"><Link href={viz}>Visualizar (beta)</Link></TableCell>
             </TableRow>)
         })
 

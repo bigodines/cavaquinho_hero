@@ -1,0 +1,78 @@
+import Header from '../../components/Header/Header'
+import React, { useEffect, useState } from 'react'
+import { Container, Grid } from '@mui/material'
+import { useRouter } from 'next/router'
+import { Fretboard } from '../../lib/fretboard'
+import Chord from '@tombatossals/react-chords/lib/Chord'
+
+export default function Chords() {
+    const router = useRouter()
+
+    const tunning = ['D', 'G', 'B', 'D']
+
+    const instrument = {
+        strings: 4,
+        fretsOnChord: 12,
+        name: 'Cavaquinho',
+        keys: [],
+        tunings: {
+            standard: tunning
+        }
+    }
+
+    const [chords, setChords] = useState([])
+
+    useEffect(() => {
+        if (!router.isReady) return
+        const { notes } = router.query
+
+        const fb = Fretboard(tunning)
+
+        const variations = fb.Draw(notes.split('-'))
+        const c = []
+
+        for (const variation of variations) {
+            const chord = {
+                frets: variation,
+                barres: [],
+                fingers: [],
+                capo: false
+            }
+
+            c.push(chord)
+        }
+
+        setChords(c)
+    }, [router.query])
+
+    const renderChords = () => {
+        const cc = Object.keys(chords).map((key, i) => {
+            console.log('chord:', chords[i])
+            return (
+                <Chord key={'chords' + i}
+                    chord={chords[i]}
+                    instrument={instrument}
+                />
+            )
+        })
+
+        return (
+            <>{cc}</>
+        )
+    }
+
+    return (
+        <>
+            <Header />
+            <Container maxWidth="lg" className="container">
+                <Grid container spacing={4}>
+                    <div className="toolbar">
+                        <Grid item xs={12}>
+                            { renderChords() }
+                        </Grid>
+                    </div>
+                </Grid>
+            </Container>
+        </>
+    )
+}
