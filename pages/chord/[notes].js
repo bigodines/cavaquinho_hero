@@ -49,10 +49,12 @@ export default function Chords() {
         const cc = Object.keys(chords).map((key, i) => {
             console.log('chord:', chords[i])
             return (
-                <Chord key={'chords' + i}
-                    chord={chords[i]}
-                    instrument={instrument}
-                />
+                <Grid item xs={2} sm={4} md={6} lg={4} key={key}>
+                    <Chord key={'chords' + i}
+                        chord={chords[i]}
+                        instrument={instrument}
+                    />
+                </Grid>
             )
         })
 
@@ -67,7 +69,7 @@ export default function Chords() {
             <Container maxWidth="lg" className="container">
                 <Grid container spacing={4}>
                     <div className="toolbar">
-                        <Grid item xs={12}>
+                        <Grid container spacing={2}>
                             { renderChords() }
                         </Grid>
                     </div>
