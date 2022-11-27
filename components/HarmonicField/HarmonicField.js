@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import styles from './HarmonicField.module.scss'
 
-import { MajorDiatonicScale, DominantChord, IIChord, SubV, PrepDim } from '../../lib/tonality'
+import { MajorDiatonicScale, DominantChord, IIChord, SubV, PrepDim, HarmonicMinorDiatonicScale } from '../../lib/tonality'
 
 export default function HarmonicField() {
     const [note, setNote] = useState('')
@@ -21,14 +21,22 @@ export default function HarmonicField() {
     useEffect(() => {
         if (!note) return
 
-        const diatonicScale = MajorDiatonicScale(note)
-
-        if (diatonicScale?.length !== 7) {
-            console.error('invalid scale')
-            return
+        // Major Harmonic Field
+        if (note.length === 1) {
+            const major = MajorDiatonicScale(note)
+            if (major?.length !== 7) {
+                console.error('invalid scale')
+                return
+            }
+            setChords(major)
+            setShowTable(true)
+        // Minor Harmonic Fields
+        } else if (note[1] === 'm') {
+            // deal with minor chords
+            const harmonicMinor = HarmonicMinorDiatonicScale(note)
+            setChords(harmonicMinor)
+            setShowTable(true)
         }
-        setChords(diatonicScale)
-        setShowTable(true)
     }, [note])
 
     return (
