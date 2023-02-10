@@ -8,10 +8,10 @@ import Chord from '@tombatossals/react-chords/lib/Chord'
 export default function Chords() {
     const router = useRouter()
 
-    const tunning = ['D', 'G', 'B', 'D']
+    const tunning = ['A', 'D', 'G', 'B', 'D']
 
     const instrument = {
-        strings: 4,
+        strings: tunning.length,
         fretsOnChord: 12,
         name: 'Cavaquinho',
         keys: [],

@@ -49,7 +49,7 @@ export default function HarmonicField() {
                 <Table className={styles.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell></TableCell>
+                            <TableCell>Escala Maior</TableCell>
                             <TableCell align="center">I</TableCell>
                             <TableCell align="center">II</TableCell>
                             <TableCell align="center">III</TableCell>
