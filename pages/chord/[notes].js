@@ -2,13 +2,15 @@ import Header from '../../components/Header/Header'
 import React, { useEffect, useState } from 'react'
 import { Container, Grid } from '@mui/material'
 import { useRouter } from 'next/router'
+import { FretboardY, Chord }  from '../../components/FretboardY/FretboardY'
 import { Fretboard } from '../../lib/fretboard'
-import Chord from '@tombatossals/react-chords/lib/Chord'
+//import Chord from '../../components/Chordz/Chord'
 
 export default function Chords() {
     const router = useRouter()
 
     const tunning = ['A', 'D', 'G', 'B', 'D']
+    //const tunning = ['D', 'G', 'B', 'D']
 
     const instrument = {
         strings: tunning.length,
@@ -36,9 +38,8 @@ export default function Chords() {
                 frets: variation,
                 barres: [],
                 fingers: [],
-                capo: false
+                capo: false,
             }
-
             c.push(chord)
         }
 
@@ -58,9 +59,13 @@ export default function Chords() {
             )
         })
 
-        return (
+      return (<>
+        <FretboardY numFrets={12} strings={tunning} />
+        <Chord chord={[1, 0, 3, 4, 1]} />
+        </>)
+        /*return (
             <>{cc}</>
-        )
+        )*/
     }
 
     return (
