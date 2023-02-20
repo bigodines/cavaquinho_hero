@@ -2,28 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const positions = {
-    string: [50, 40, 30, 20, 10, 0],
-    fret: [-4, 6.5, 18, 30, 42, 54, 66, 78],
+    // string: [50, 40, 30, 20, 10, 0], // old
+    fret: [-4, 6.5, 18, 30, 42, 54, 66, 78, 90, 114, 126, 138], // where to draw the circles, hopefully at the center of the fret
     finger: [-3, 8, 19.5, 31.5, 4.5]
 }
 
-const offset = {
-    4: 0,
-    5: -1,
-    6: -2
-}
-
+// used to align the dots with the strings in the fretboard. It varies depending on # of strings (4,5 or 6)
 const stringPositions = {
-  4: [50, 40, 30, 20],
+  4: [50, 40, 30, 20, 10],
   5: [55, 45, 35, 25, 15, 5],
   6: [50, 40, 30, 20, 10, 0],
 }
 
-const getStringPosition = (string, strings) => {
-    console.log('string:', string, ' strings: ', strings)
-    return stringPositions[strings][string]
-    // return positions.string[string + offset[strings]]
-}
+const getStringPosition = (string, strings) =>
+    stringPositions[strings][string]
 
 const radius = {
     open: 2,

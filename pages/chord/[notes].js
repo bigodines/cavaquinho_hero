@@ -48,7 +48,7 @@ export default function Chords() {
 
     const renderChords = () => {
         const cc = Object.keys(chords).map((key, i) => {
-            console.log('chord:', chords[i])
+            console.log('chord/[notes] found chord:', chords[i])
             return (
                 <Grid item xs={2} sm={4} md={6} lg={4} key={key}>
                     <Chord key={'chords' + i}
