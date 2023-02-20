@@ -9,12 +9,21 @@ const positions = {
 
 const offset = {
     4: 0,
-    5: 0,
-    6: -1
+    5: -1,
+    6: -2
 }
 
-const getStringPosition = (string, strings) =>
-    positions.string[string + offset[strings]]
+const stringPositions = {
+  4: [50, 40, 30, 20],
+  5: [55, 45, 35, 25, 15, 5],
+  6: [50, 40, 30, 20, 10, 0],
+}
+
+const getStringPosition = (string, strings) => {
+    console.log('string:', string, ' strings: ', strings)
+    return stringPositions[strings][string]
+    // return positions.string[string + offset[strings]]
+}
 
 const radius = {
     open: 2,

@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import FretboardY from '../../components/FretboardY/FretboardY'
 import { Fretboard } from '../../lib/fretboard'
 import Chord from '../../components/Chordz/Chord'
-import ChordY from '../../components/FretboardY/ChordY'
 
 export default function Chords() {
     const router = useRouter()
