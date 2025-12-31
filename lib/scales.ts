@@ -156,6 +156,28 @@ export const harmonicMinor = (root: string): Scale => {
   return scaleGenerator(root, scaleSteps);
 };
 
+/**
+ * Generates a natural minor scale (Aeolian mode) from a root note
+ * Pattern: W H W W H W W
+ * @param root - The root note
+ * @returns The natural minor scale
+ */
+export const naturalMinor = (root: string): Scale => {
+  const scaleSteps = [2, 1, 2, 2, 1, 2];
+  return scaleGenerator(root, scaleSteps);
+};
+
+/**
+ * Generates a melodic minor scale (ascending) from a root note
+ * Pattern: W H W W W W H
+ * @param root - The root note
+ * @returns The melodic minor scale (ascending form)
+ */
+export const melodicMinor = (root: string): Scale => {
+  const scaleSteps = [2, 1, 2, 2, 2, 2];
+  return scaleGenerator(root, scaleSteps);
+};
+
 // Legacy exports for backward compatibility
 export const IsValidNote = isValidNote;
 export const NoteAdd = noteAdd;

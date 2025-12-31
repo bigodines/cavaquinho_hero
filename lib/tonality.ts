@@ -3,15 +3,23 @@
  * Provides functions for working with diatonic scales and chord progressions
  */
 
-import { major, harmonicMinor, noteAdd, degreeLookup, enharmony, type Note } from './scales';
+import { major, harmonicMinor, naturalMinor, melodicMinor, noteAdd, degreeLookup, enharmony, type Note } from './scales';
 
 /**
- * Generates the diatonic harmonic field of a major scale
+ * Generates the diatonic harmonic field of a major scale (tetrads with 7ths)
  * @param root - The root note
- * @param tetrads - Whether to include 7th chords (default: false for triads)
- * @returns Array of diatonic chords with their qualities
+ * @returns Array of diatonic chords with their qualities (all as tetrads)
+ * 
+ * Chord qualities by degree:
+ * - I: Major 7 (7M)
+ * - ii: Minor 7 (m7)
+ * - iii: Minor 7 (m7)
+ * - IV: Major 7 (7M)
+ * - V: Dominant 7 (7)
+ * - vi: Minor 7 (m7)
+ * - vii°: Half-diminished (m7b5)
  */
-export const majorDiatonicScale = (root: Note, tetrads: boolean = false): string[] => {
+export const majorDiatonicScale = (root: Note): string[] => {
   const scale = major(root);
   
   if (!scale || scale.length !== 7) {
@@ -22,15 +30,14 @@ export const majorDiatonicScale = (root: Note, tetrads: boolean = false): string
   return scale.map((note, i) => {
     const degree = i + 1;
     
-    // I and IV are major (or major 7th)
-    if ((degree === 1 || degree === 4) && tetrads) {
-      return note + '7+';
+    // I and IV are major 7th
+    if (degree === 1 || degree === 4) {
+      return note + '7M';
     }
     
-    // ii, iii, vi are minor (or minor 7th)
+    // ii, iii, vi are minor 7th
     if (degree === 2 || degree === 3 || degree === 6) {
-      const suffix = tetrads ? 'm7' : 'm';
-      return note + suffix;
+      return note + 'm7';
     }
     
     // V is dominant 7th
@@ -38,7 +45,7 @@ export const majorDiatonicScale = (root: Note, tetrads: boolean = false): string
       return note + '7';
     }
     
-    // vii° is diminished (or half-diminished)
+    // vii° is half-diminished
     if (degree === 7) {
       return note + 'm7b5';
     }
@@ -48,12 +55,20 @@ export const majorDiatonicScale = (root: Note, tetrads: boolean = false): string
 };
 
 /**
- * Generates the harmonic minor field
+ * Generates the harmonic minor diatonic field (tetrads with 7ths)
  * @param root - The root note (can include 'm' suffix)
- * @param tetrads - Whether to include 7th chords (default: false)
- * @returns Array of diatonic chords with their qualities
+ * @returns Array of diatonic chords with their qualities (all as tetrads)
+ * 
+ * Chord qualities by degree:
+ * - i: Minor/Major 7 (m7M) - minor triad with major 7th
+ * - ii°: Half-diminished (m7b5)
+ * - III+: Augmented Major 7 (7M#5)
+ * - iv: Minor 7 (m7)
+ * - V: Dominant 7 (7)
+ * - VI: Major 7 (7M)
+ * - vii°: Diminished 7 (dim7)
  */
-export const harmonicMinorDiatonicScale = (root: Note, tetrads: boolean = false): string[] => {
+export const harmonicMinorDiatonicScale = (root: Note): string[] => {
   // Strip 'm' suffix if present at the end
   const cleanRoot = root.endsWith('m') && root.length > 1 ? root.slice(0, -1) : root;
   
@@ -67,10 +82,14 @@ export const harmonicMinorDiatonicScale = (root: Note, tetrads: boolean = false)
   return scale.map((note, i) => {
     const degree = i + 1;
     
-    // i and iv are minor
-    if (degree === 1 || degree === 4) {
-      const suffix = tetrads ? 'm7' : 'm';
-      return note + suffix;
+    // i is minor/major 7 (minor triad + major 7th)
+    if (degree === 1) {
+      return note + 'm7M';
+    }
+    
+    // iv is minor 7
+    if (degree === 4) {
+      return note + 'm7';
     }
 
     // ii° is half-diminished
@@ -78,19 +97,133 @@ export const harmonicMinorDiatonicScale = (root: Note, tetrads: boolean = false)
       return note + 'm7b5';
     }
 
-    // III and VI are augmented
-    if (degree === 3 || degree === 6) {
-      const suffix = tetrads ? '7+' : 'm7';
-      return note + suffix;
+    // III+ is augmented major 7
+    if (degree === 3) {
+      return note + '7M#5';
+    }
+    
+    // VI is major 7
+    if (degree === 6) {
+      return note + '7M';
     }
 
-    // V is dominant
+    // V is dominant 7
     if (degree === 5) {
       return note + '7';
     }
 
-    // vii° is diminished / half-diminished
+    // vii° is diminished 7 (fully diminished)
     if (degree === 7) {
+      return note + 'dim7';
+    }
+
+    return note;
+  });
+};
+
+/**
+ * Generates the natural minor (Aeolian) diatonic field (tetrads with 7ths)
+ * @param root - The root note (can include 'm' suffix)
+ * @returns Array of diatonic chords with their qualities (all as tetrads)
+ * 
+ * Chord qualities by degree:
+ * - i: Minor 7 (m7)
+ * - ii°: Half-diminished (m7b5)
+ * - III: Major 7 (7M)
+ * - iv: Minor 7 (m7)
+ * - v: Minor 7 (m7)
+ * - VI: Major 7 (7M)
+ * - VII: Dominant 7 (7)
+ */
+export const naturalMinorDiatonicScale = (root: Note): string[] => {
+  // Strip 'm' suffix if present at the end
+  const cleanRoot = root.endsWith('m') && root.length > 1 ? root.slice(0, -1) : root;
+  
+  const scale = naturalMinor(cleanRoot);
+
+  if (!scale || scale.length !== 7) {
+    console.error('invalid note');
+    return [];
+  }
+
+  return scale.map((note, i) => {
+    const degree = i + 1;
+    
+    // i, iv, v are minor 7
+    if (degree === 1 || degree === 4 || degree === 5) {
+      return note + 'm7';
+    }
+
+    // ii° is half-diminished
+    if (degree === 2) {
+      return note + 'm7b5';
+    }
+
+    // III and VI are major 7
+    if (degree === 3 || degree === 6) {
+      return note + '7M';
+    }
+
+    // VII is dominant 7
+    if (degree === 7) {
+      return note + '7';
+    }
+
+    return note;
+  });
+};
+
+/**
+ * Generates the melodic minor diatonic field (tetrads with 7ths)
+ * Uses the ascending form of the melodic minor scale
+ * @param root - The root note (can include 'm' suffix)
+ * @returns Array of diatonic chords with their qualities (all as tetrads)
+ * 
+ * Chord qualities by degree:
+ * - i: Minor/Major 7 (m7M)
+ * - ii: Minor 7 (m7)
+ * - III+: Augmented Major 7 (7M#5)
+ * - IV: Dominant 7 (7)
+ * - V: Dominant 7 (7)
+ * - vi°: Half-diminished (m7b5)
+ * - vii°: Half-diminished (m7b5)
+ */
+export const melodicMinorDiatonicScale = (root: Note): string[] => {
+  // Strip 'm' suffix if present at the end
+  const cleanRoot = root.endsWith('m') && root.length > 1 ? root.slice(0, -1) : root;
+  
+  const scale = melodicMinor(cleanRoot);
+
+  if (!scale || scale.length !== 7) {
+    console.error('invalid note');
+    return [];
+  }
+
+  return scale.map((note, i) => {
+    const degree = i + 1;
+    
+    // i is minor/major 7 (minor triad + major 7th)
+    if (degree === 1) {
+      return note + 'm7M';
+    }
+
+    // ii is minor 7
+    if (degree === 2) {
+      return note + 'm7';
+    }
+
+    // III+ is augmented major 7
+    if (degree === 3) {
+      return note + '7M#5';
+    }
+
+    // IV and V are dominant 7
+    if (degree === 4 || degree === 5) {
+      return note + '7';
+    }
+
+    // vi° and vii° are half-diminished
+    if (degree === 6 || degree === 7) {
       return note + 'm7b5';
     }
 
@@ -100,11 +233,13 @@ export const harmonicMinorDiatonicScale = (root: Note, tetrads: boolean = false)
 
 /**
  * Extracts the root note from a chord symbol
- * @param chord - The chord symbol (e.g., 'Am7', 'C#', 'Bb7+')
+ * @param chord - The chord symbol (e.g., 'Am7', 'C#7M', 'Bb7', 'G#dim7', 'C7M#5')
  * @returns The root note without chord quality indicators
  */
 const extractRootFromChord = (chord: string): Note => {
-  return chord.replace(/m|7|\+|b5|o|dim|aug|maj|M/g, '');
+  // Match the root note: a letter A-G optionally followed by # or b
+  const match = chord.match(/^([A-G][#b]?)/);
+  return match ? match[1] : chord;
 };
 
 /**

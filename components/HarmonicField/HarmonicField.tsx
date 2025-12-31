@@ -23,16 +23,28 @@ import {
   dominantChord,
   iiChord,
   subV,
-  prepDim,
   harmonicMinorDiatonicScale,
+  naturalMinorDiatonicScale,
+  melodicMinorDiatonicScale,
 } from '../../lib/tonality';
 
 type ScaleMode = 'major' | 'minor';
 
+interface MinorScales {
+  natural: string[];
+  harmonic: string[];
+  melodic: string[];
+}
+
 export default function HarmonicField() {
   const [note, setNote] = useState('');
   const [mode, setMode] = useState<ScaleMode>('major');
-  const [chords, setChords] = useState<string[]>([]);
+  const [majorChords, setMajorChords] = useState<string[]>([]);
+  const [minorScales, setMinorScales] = useState<MinorScales>({
+    natural: [],
+    harmonic: [],
+    melodic: [],
+  });
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNote(event.target.value.trim());
@@ -46,7 +58,8 @@ export default function HarmonicField() {
 
   useEffect(() => {
     if (!note) {
-      setChords([]);
+      setMajorChords([]);
+      setMinorScales({ natural: [], harmonic: [], melodic: [] });
       return;
     }
 
@@ -54,23 +67,33 @@ export default function HarmonicField() {
     const capitalizedNote = note[0].toUpperCase() + note.substring(1);
 
     if (mode === 'minor') {
-      const harmonicMinor = harmonicMinorDiatonicScale(capitalizedNote + 'm');
-      if (harmonicMinor?.length === 7) {
-        setChords(harmonicMinor);
-      }
+      const natural = naturalMinorDiatonicScale(capitalizedNote);
+      const harmonic = harmonicMinorDiatonicScale(capitalizedNote);
+      const melodic = melodicMinorDiatonicScale(capitalizedNote);
+      
+      setMinorScales({
+        natural: natural?.length === 7 ? natural : [],
+        harmonic: harmonic?.length === 7 ? harmonic : [],
+        melodic: melodic?.length === 7 ? melodic : [],
+      });
+      setMajorChords([]);
     } else {
       const major = majorDiatonicScale(capitalizedNote);
       if (major?.length === 7) {
-        setChords(major);
+        setMajorChords(major);
       }
+      setMinorScales({ natural: [], harmonic: [], melodic: [] });
     }
   }, [note, mode]);
 
   const degrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-  const hasChords = chords.length === 7;
+  const hasMajorChords = majorChords.length === 7;
+  const hasMinorChords = minorScales.natural.length === 7;
+  const hasChords = hasMajorChords || hasMinorChords;
   const displayNote = note ? note[0].toUpperCase() + note.substring(1) : '';
 
   const renderHarmonicRow = (
+    chords: string[],
     label: string, 
     renderCell: (chord: string, index: number) => React.ReactNode,
     showEmpty = false
@@ -98,6 +121,100 @@ export default function HarmonicField() {
         </TableCell>
       ))}
     </TableRow>
+  );
+
+  const getChordColor = (chord: string) => {
+    if (chord.includes('dim')) return '#fff3e0'; // orange tint for diminished
+    if (chord.includes('m7b5')) return '#ffebee'; // red tint for half-dim
+    if (chord.includes('7M#5') || chord.includes('+')) return '#f3e5f5'; // purple tint for augmented
+    if (chord.includes('m7M')) return '#e8eaf6'; // indigo tint for minor-major
+    if (chord.includes('m')) return '#e3f2fd'; // blue tint for minor
+    return '#e8f5e9'; // green tint for major/dominant
+  };
+
+  const renderScaleTable = (
+    chords: string[], 
+    title: string, 
+    subtitle: string,
+    showSecondaryDominants = true
+  ) => (
+    <Paper sx={{ overflow: 'hidden', mb: 3 }}>
+      <Box sx={{ 
+        px: 3, 
+        py: 2, 
+        backgroundColor: '#1a1a2e',
+        color: 'white',
+      }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          {title}
+        </Typography>
+        <Typography variant="caption" sx={{ opacity: 0.7 }}>
+          {subtitle}
+        </Typography>
+      </Box>
+      <TableContainer sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell 
+                sx={{ 
+                  fontWeight: 600,
+                  position: 'sticky',
+                  left: 0,
+                  backgroundColor: '#f8f9fa',
+                  zIndex: 2,
+                }}
+              >
+                Função
+              </TableCell>
+              {degrees.map((degree) => (
+                <TableCell 
+                  key={degree} 
+                  align="center"
+                  sx={{ fontWeight: 600, minWidth: 80 }}
+                >
+                  {degree}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {renderHarmonicRow(chords, 'Acordes Diatônicos', (chord) => (
+              <Chip 
+                label={chord} 
+                size="small" 
+                sx={{ 
+                  fontWeight: 600,
+                  backgroundColor: getChordColor(chord),
+                }} 
+              />
+            ), true)}
+            
+            {showSecondaryDominants && (
+              <>
+                {renderHarmonicRow(chords, 'Dominantes (V7)', (chord) => (
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    {dominantChord(chord)}
+                  </Typography>
+                ))}
+                
+                {renderHarmonicRow(chords, 'II Cadencial', (chord) => (
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    {iiChord(chord)}
+                  </Typography>
+                ))}
+                
+                {renderHarmonicRow(chords, 'SubV', (chord) => (
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    {subV(chord)}
+                  </Typography>
+                ))}
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 
   return (
@@ -181,96 +298,72 @@ export default function HarmonicField() {
       {/* Results */}
       <Fade in={hasChords} timeout={300}>
         <Box>
-          {hasChords && (
+          {/* Major Scale */}
+          {hasMajorChords && (
             <>
               <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {displayNote} {mode === 'major' ? 'Maior' : 'Menor Harmônica'}
+                  {displayNote} Maior
                 </Typography>
                 <Chip 
-                  label={mode === 'major' ? 'Campo Maior' : 'Campo Menor'}
+                  label="Campo Maior"
                   size="small"
-                  color={mode === 'major' ? 'primary' : 'secondary'}
+                  color="primary"
+                />
+              </Box>
+              {renderScaleTable(
+                majorChords,
+                `${displayNote} Maior`,
+                'I7M - IIm7 - IIIm7 - IV7M - V7 - VIm7 - VIIm7(b5)',
+                true
+              )}
+            </>
+          )}
+
+          {/* Minor Scales */}
+          {hasMinorChords && (
+            <>
+              <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {displayNote} Menor
+                </Typography>
+                <Chip 
+                  label="3 Escalas Menores"
+                  size="small"
+                  color="secondary"
                 />
               </Box>
 
-              <Paper sx={{ overflow: 'hidden' }}>
-                <TableContainer sx={{ maxWidth: '100%', overflowX: 'auto' }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell 
-                          sx={{ 
-                            fontWeight: 600,
-                            position: 'sticky',
-                            left: 0,
-                            backgroundColor: '#f8f9fa',
-                            zIndex: 2,
-                          }}
-                        >
-                          Função
-                        </TableCell>
-                        {degrees.map((degree) => (
-                          <TableCell 
-                            key={degree} 
-                            align="center"
-                            sx={{ fontWeight: 600, minWidth: 80 }}
-                          >
-                            {degree}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {renderHarmonicRow('Acordes Diatônicos', (chord) => (
-                        <Chip 
-                          label={chord} 
-                          size="small" 
-                          sx={{ 
-                            fontWeight: 600,
-                            backgroundColor: chord.includes('m7b5') ? '#ffebee' : 
-                                           chord.includes('m') ? '#e3f2fd' : '#e8f5e9',
-                          }} 
-                        />
-                      ), true)}
-                      
-                      {renderHarmonicRow('Dominantes (V7)', (chord) => (
-                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                          {dominantChord(chord)}
-                        </Typography>
-                      ))}
-                      
-                      {renderHarmonicRow('II Cadencial', (chord) => (
-                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                          {iiChord(chord)}
-                        </Typography>
-                      ))}
-                      
-                      {renderHarmonicRow('Dim. Preparatório', (chord) => (
-                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                          {prepDim(chord)}
-                        </Typography>
-                      ))}
-                      
-                      {renderHarmonicRow('SubV', (chord) => (
-                        <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                          {subV(chord)}
-                        </Typography>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Paper>
+              {renderScaleTable(
+                minorScales.natural,
+                `${displayNote} Menor Natural (Eólio)`,
+                'Im7 - IIm7(b5) - III7M - IVm7 - Vm7 - VI7M - VII7',
+                true
+              )}
 
-              <Box sx={{ mt: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Dica:</strong> Use os dominantes secundários para criar tensão harmônica 
-                  antes de resolver em qualquer acorde do campo. O SubV é o substituto tritonal 
-                  do dominante e pode ser usado para adicionar cor às suas progressões.
-                </Typography>
-              </Box>
+              {renderScaleTable(
+                minorScales.harmonic,
+                `${displayNote} Menor Harmônica`,
+                'Im7M - IIm7(b5) - III7M(#5) - IVm7 - V7 - VI7M - VIIdim7',
+                true
+              )}
+
+              {renderScaleTable(
+                minorScales.melodic,
+                `${displayNote} Menor Melódica`,
+                'Im7M - IIm7 - III7M(#5) - IV7 - V7 - VIm7(b5) - VIIm7(b5)',
+                true
+              )}
             </>
           )}
+
+          <Box sx={{ mt: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              <strong>Dica:</strong> Use os dominantes secundários para criar tensão harmônica 
+              antes de resolver em qualquer acorde do campo. O SubV é o substituto tritonal 
+              do dominante e pode ser usado para adicionar cor às suas progressões.
+            </Typography>
+          </Box>
         </Box>
       </Fade>
 
