@@ -15,13 +15,16 @@ const onlyDots = (chord: ChordData) =>
     .map((f, index) => ({ position: index, value: f }))
     .filter((f) => !chord.barres || chord.barres.indexOf(f.value) === -1);
 
-const Chord: React.FC<ChordProps> = ({ chord, instrument, lite = false }) =>
-  chord ? (
+const Chord: React.FC<ChordProps> = ({ chord, instrument, lite = false }) => {
+  // Calculate viewBox height based on fretsOnChord (12px per fret + padding)
+  const viewBoxHeight = (instrument.fretsOnChord || 5) * 12 + 40;
+  
+  return chord ? (
     <svg
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMinYMin meet"
-      viewBox="0 0 80 180"
+      viewBox={`0 0 80 ${viewBoxHeight}`}
     >
       <g transform="translate(13, 13)">
         <Neck
@@ -59,5 +62,6 @@ const Chord: React.FC<ChordProps> = ({ chord, instrument, lite = false }) =>
       </g>
     </svg>
   ) : null;
+};
 
 export default Chord;
