@@ -27,6 +27,37 @@ import {
   naturalMinorDiatonicScale,
   melodicMinorDiatonicScale,
 } from '../../lib/tonality';
+import { isValidNote } from '../../lib/scales';
+
+/**
+ * Parses user input to extract root note and detect if minor mode
+ * Handles inputs like "Am", "Ebm", "C", "F#", etc.
+ */
+function parseNoteInput(input: string): { root: string | null; isMinor: boolean } {
+  if (!input || input.length < 1) {
+    return { root: null, isMinor: false };
+  }
+
+  // Check if ends with 'm' for minor (but not just 'm' alone)
+  const isMinor = input.length > 1 && input.toLowerCase().endsWith('m');
+  
+  // Extract root note (remove trailing 'm' if minor)
+  const rootPart = isMinor ? input.slice(0, -1) : input;
+  
+  // Normalize: uppercase first letter, lowercase accidental
+  if (rootPart.length < 1 || rootPart.length > 2) {
+    return { root: null, isMinor: false };
+  }
+  
+  const normalized = rootPart[0].toUpperCase() + rootPart.substring(1).toLowerCase();
+  
+  // Validate
+  if (!isValidNote(normalized)) {
+    return { root: null, isMinor };
+  }
+  
+  return { root: normalized, isMinor };
+}
 
 type ScaleMode = 'major' | 'minor';
 
@@ -37,7 +68,8 @@ interface MinorScales {
 }
 
 export default function HarmonicField() {
-  const [note, setNote] = useState('');
+  const [rawInput, setRawInput] = useState('');
+  const [rootNote, setRootNote] = useState<string | null>(null);
   const [mode, setMode] = useState<ScaleMode>('major');
   const [majorChords, setMajorChords] = useState<string[]>([]);
   const [minorScales, setMinorScales] = useState<MinorScales>({
@@ -45,9 +77,28 @@ export default function HarmonicField() {
     harmonic: [],
     melodic: [],
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNote(event.target.value.trim());
+    const value = event.target.value.trim();
+    setRawInput(value);
+    
+    // Parse the input and auto-detect mode
+    const { root, isMinor } = parseNoteInput(value);
+    setRootNote(root);
+    
+    if (value && !root) {
+      setError('Nota inválida. Use: C, D, E, F, G, A, B (com # ou b, ex: Am, Eb)');
+    } else {
+      setError(null);
+    }
+    
+    // Auto-switch mode if user types "Am", "Ebm", etc.
+    if (isMinor) {
+      setMode('minor');
+    } else if (root && !isMinor) {
+      setMode('major');
+    }
   };
 
   const handleModeChange = (_: React.MouseEvent<HTMLElement>, newMode: ScaleMode | null) => {
@@ -57,19 +108,16 @@ export default function HarmonicField() {
   };
 
   useEffect(() => {
-    if (!note) {
+    if (!rootNote) {
       setMajorChords([]);
       setMinorScales({ natural: [], harmonic: [], melodic: [] });
       return;
     }
 
-    // Capitalize the note
-    const capitalizedNote = note[0].toUpperCase() + note.substring(1);
-
     if (mode === 'minor') {
-      const natural = naturalMinorDiatonicScale(capitalizedNote);
-      const harmonic = harmonicMinorDiatonicScale(capitalizedNote);
-      const melodic = melodicMinorDiatonicScale(capitalizedNote);
+      const natural = naturalMinorDiatonicScale(rootNote);
+      const harmonic = harmonicMinorDiatonicScale(rootNote);
+      const melodic = melodicMinorDiatonicScale(rootNote);
       
       setMinorScales({
         natural: natural?.length === 7 ? natural : [],
@@ -78,19 +126,21 @@ export default function HarmonicField() {
       });
       setMajorChords([]);
     } else {
-      const major = majorDiatonicScale(capitalizedNote);
+      const major = majorDiatonicScale(rootNote);
       if (major?.length === 7) {
         setMajorChords(major);
+      } else {
+        setMajorChords([]);
       }
       setMinorScales({ natural: [], harmonic: [], melodic: [] });
     }
-  }, [note, mode]);
+  }, [rootNote, mode]);
 
   const degrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
   const hasMajorChords = majorChords.length === 7;
   const hasMinorChords = minorScales.natural.length === 7;
   const hasChords = hasMajorChords || hasMinorChords;
-  const displayNote = note ? note[0].toUpperCase() + note.substring(1) : '';
+  const displayNote = rootNote || '';
 
   const renderHarmonicRow = (
     chords: string[],
@@ -245,23 +295,24 @@ export default function HarmonicField() {
           alignItems: 'center',
         }}>
           <TextField
-            placeholder="Ex: C, Eb, F#..."
+            placeholder="Ex: C, Am, Eb, F#m..."
             variant="outlined"
             name="rootNote"
-            value={note}
+            value={rawInput}
             onChange={handleNoteChange}
             autoComplete="off"
+            error={!!error}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <MusicNoteIcon sx={{ color: 'rgba(0,0,0,0.4)' }} />
+                  <MusicNoteIcon sx={{ color: error ? 'error.main' : 'rgba(0,0,0,0.4)' }} />
                 </InputAdornment>
               ),
             }}
             sx={{
               backgroundColor: 'white',
               borderRadius: 2,
-              width: { xs: '100%', sm: 200 },
+              width: { xs: '100%', sm: 220 },
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
               },
@@ -368,11 +419,24 @@ export default function HarmonicField() {
       </Fade>
 
       {/* Empty State */}
-      {!hasChords && (
+      {!hasChords && !error && (
         <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
           <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
           <Typography variant="body1">
             Digite uma nota acima para explorar o campo harmônico
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1, opacity: 0.7 }}>
+            Dica: Digite &quot;Am&quot; para ver automaticamente o campo menor de Lá
+          </Typography>
+        </Box>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <Box sx={{ textAlign: 'center', py: 8, color: 'error.main' }}>
+          <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
+          <Typography variant="body1">
+            {error}
           </Typography>
         </Box>
       )}

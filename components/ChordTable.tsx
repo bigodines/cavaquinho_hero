@@ -18,6 +18,7 @@ import Link from 'next/link';
 import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import * as chords from '../lib/chords';
 import type { Triad, Tetrad, Sixth } from '../lib/chords';
+import { isValidNote } from '../lib/scales';
 
 type ChordResult = Triad | Tetrad | Sixth | null;
 
@@ -25,15 +26,33 @@ interface ChordsCollection {
   [key: string]: ChordResult;
 }
 
+/**
+ * Normalizes user input to a valid note format
+ * Handles case-insensitivity and common variations
+ */
+function normalizeNote(input: string): string | null {
+  if (!input || input.length < 1 || input.length > 2) {
+    return null;
+  }
+  
+  // Capitalize first letter, lowercase the rest (for # or b)
+  const normalized = input[0].toUpperCase() + input.substring(1).toLowerCase();
+  
+  // Validate the note
+  if (!isValidNote(normalized)) {
+    return null;
+  }
+  
+  return normalized;
+}
+
 function generateChords(n: string): ChordsCollection {
-  if (!n || n.length < 1) {
+  const note = normalizeNote(n);
+  if (!note) {
     return {};
   }
 
-  // Capitalize first letter
-  const note = n[0].toUpperCase() + n.substring(1);
-
-  const ret: ChordsCollection = {
+  return {
     '': chords.majorTriad(note),
     m: chords.minorTriad(note),
     '+': chords.augmentedTriad(note),
@@ -50,8 +69,6 @@ function generateChords(n: string): ChordsCollection {
     6: chords.sixthTetrad(note),
     m6: chords.minorSixthTetrad(note),
   };
-
-  return ret;
 }
 
 const chordCategories: Record<string, string[]> = {
@@ -63,6 +80,7 @@ const chordCategories: Record<string, string[]> = {
 export default function ChordTable() {
   const [note, setNote] = useState('');
   const [chordsData, setChordsData] = useState<ChordsCollection>({});
+  const [error, setError] = useState<string | null>(null);
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
@@ -73,8 +91,15 @@ export default function ChordTable() {
   useEffect(() => {
     if (note.length > 0) {
       const c = generateChords(note);
-      setChordsData(c);
+      if (Object.keys(c).length === 0) {
+        setError('Nota inválida. Use: C, D, E, F, G, A, B (com # ou b)');
+        setChordsData({});
+      } else {
+        setError(null);
+        setChordsData(c);
+      }
     } else {
+      setError(null);
       setChordsData({});
     }
   }, [note]);
@@ -149,10 +174,11 @@ export default function ChordTable() {
           value={note}
           onChange={handleNoteChange}
           autoComplete="off"
+          error={!!error}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <MusicNoteIcon sx={{ color: 'rgba(0,0,0,0.4)' }} />
+                <MusicNoteIcon sx={{ color: error ? 'error.main' : 'rgba(0,0,0,0.4)' }} />
               </InputAdornment>
             ),
           }}
@@ -202,11 +228,21 @@ export default function ChordTable() {
       </Fade>
 
       {/* Empty State */}
-      {!hasChords && (
+      {!hasChords && !error && (
         <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
           <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
           <Typography variant="body1">
             Digite uma nota acima para começar
+          </Typography>
+        </Box>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <Box sx={{ textAlign: 'center', py: 8, color: 'error.main' }}>
+          <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
+          <Typography variant="body1">
+            {error}
           </Typography>
         </Box>
       )}
