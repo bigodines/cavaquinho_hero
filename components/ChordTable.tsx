@@ -6,11 +6,16 @@ import {
   TableHead,
   Paper,
   TableContainer,
-  Button,
   TextField,
+  Box,
+  Typography,
+  Chip,
+  InputAdornment,
+  Fade,
 } from '@mui/material';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import Link from 'next/link';
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import * as chords from '../lib/chords';
 import type { Triad, Tetrad, Sixth } from '../lib/chords';
 
@@ -49,82 +54,162 @@ function generateChords(n: string): ChordsCollection {
   return ret;
 }
 
+const chordCategories: Record<string, string[]> = {
+  'Tríades': ['', 'm', '+', '°'],
+  'Tétrades (7ª)': ['7', '7M', 'm7', 'm7+', '7(#5)', '7+(#5)', 'Ø', 'o', '7(b5)'],
+  'Acordes com 6ª': ['6', 'm6'],
+};
+
 export default function ChordTable() {
   const [note, setNote] = useState('');
-  const [showTable, setShowTable] = useState(false);
   const [chordsData, setChordsData] = useState<ChordsCollection>({});
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNote(event.target.value);
+    const value = event.target.value.trim();
+    setNote(value);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // Auto-generate chords when note changes
+  useEffect(() => {
+    if (note.length > 0) {
+      const c = generateChords(note);
+      setChordsData(c);
+    } else {
+      setChordsData({});
+    }
+  }, [note]);
 
-    const c = generateChords(note);
+  const hasChords = useMemo(() => Object.keys(chordsData).length > 0, [chordsData]);
 
-    setChordsData(c);
-    setShowTable(true);
-  };
-
-  const renderChords = () => {
-    const rows = Object.keys(chordsData).map((key) => {
+  const renderChordRows = (keys: string[]) => {
+    return keys.map((key) => {
       const chord = chordsData[key];
       if (!chord) return null;
 
       const notes = Object.values(chord).join('-');
       const viz = `/chord/${notes}`;
+      const displayNote = note[0].toUpperCase() + note.substring(1);
 
       return (
         <TableRow key={key}>
-          <TableCell component="th" scope="row">
-            {note + key}
+          <TableCell>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip 
+                label={displayNote + key} 
+                size="small" 
+                color="secondary"
+                sx={{ fontWeight: 600, minWidth: 60 }}
+              />
+            </Box>
           </TableCell>
-          <TableCell align="right">{Object.values(chord).join(', ')}</TableCell>
+          <TableCell>
+            <Typography variant="body2" sx={{ fontFamily: 'monospace', letterSpacing: 1 }}>
+              {Object.values(chord).join(' - ')}
+            </Typography>
+          </TableCell>
           <TableCell align="right">
-            <Link href={viz}>Visualizar (beta)</Link>
+            <Link href={viz} style={{ 
+              color: '#e94560', 
+              fontWeight: 500,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+            }}>
+              Ver no braço →
+            </Link>
           </TableCell>
         </TableRow>
       );
     });
-
-    return <TableBody>{rows}</TableBody>;
   };
 
   return (
-    <div>
-      <form
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-        style={{ textAlign: 'center', marginBottom: '2rem' }}
+    <Box>
+      {/* Search Input */}
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          mb: 4, 
+          textAlign: 'center',
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%)',
+          borderRadius: 3,
+        }}
       >
+        <Typography variant="h5" sx={{ color: 'white', mb: 1, fontWeight: 600 }}>
+          Gerador de Acordes
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3 }}>
+          Digite uma nota para ver todos os acordes possíveis
+        </Typography>
         <TextField
-          id="outlined-basic"
-          label="Fundamental"
-          variant="standard"
+          placeholder="Ex: C, Eb, F#..."
+          variant="outlined"
           name="rootNote"
+          value={note}
           onChange={handleNoteChange}
-          style={{ marginRight: '1rem' }}
+          autoComplete="off"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <MusicNoteIcon sx={{ color: 'rgba(0,0,0,0.4)' }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            backgroundColor: 'white',
+            borderRadius: 2,
+            width: { xs: '100%', sm: 300 },
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+            },
+          }}
         />
-        <Button type="submit" variant="contained">
-          OK
-        </Button>
-      </form>
-      {showTable && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650, width: 1200 }} aria-label="chord table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Acorde</TableCell>
-                <TableCell align="right">Notas</TableCell>
-                <TableCell align="right">Extras</TableCell>
-              </TableRow>
-            </TableHead>
-            {renderChords()}
-          </Table>
-        </TableContainer>
+      </Paper>
+
+      {/* Results */}
+      <Fade in={hasChords} timeout={300}>
+        <Box>
+          {hasChords && Object.entries(chordCategories).map(([category, keys]) => (
+            <Paper key={category} sx={{ mb: 3, overflow: 'hidden' }}>
+              <Box sx={{ 
+                px: 3, 
+                py: 2, 
+                backgroundColor: '#f8f9fa',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+              }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {category}
+                </Typography>
+              </Box>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ width: '25%' }}>Acorde</TableCell>
+                      <TableCell sx={{ width: '50%' }}>Notas</TableCell>
+                      <TableCell align="right" sx={{ width: '25%' }}>Visualizar</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {renderChordRows(keys)}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          ))}
+        </Box>
+      </Fade>
+
+      {/* Empty State */}
+      {!hasChords && (
+        <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
+          <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
+          <Typography variant="body1">
+            Digite uma nota acima para começar
+          </Typography>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }

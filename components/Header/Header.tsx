@@ -6,8 +6,10 @@ import {
   IconButton,
   Drawer,
   MenuItem,
+  Box,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import React, { useState, useEffect } from 'react';
 import ActiveLink from '../ActiveLink';
 import { styled } from '@mui/system';
@@ -27,7 +29,7 @@ const headersData: HeaderData[] = [
     href: '/chords',
   },
   {
-    label: 'Campo Harmonico',
+    label: 'Campo Harmônico',
     href: '/harmonic_field',
   },
   {
@@ -64,9 +66,12 @@ export default function Header() {
   }, []);
 
   const chLogo = (
-    <Typography variant="h6" component="h1" className={styles.logo}>
-      <Link href="/">Cavaquinho Hero</Link>
-    </Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <MusicNoteIcon sx={{ fontSize: 28 }} />
+      <Typography variant="h6" component="h1" className={styles.logo}>
+        <Link href="/">Cavaquinho Hero</Link>
+      </Typography>
+    </Box>
   );
 
   const getMenuButtons = () => {

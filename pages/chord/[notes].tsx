@@ -1,8 +1,18 @@
 import Header from '../../components/Header/Header';
 import React, { useEffect, useState } from 'react';
-import { Container, Grid, Typography } from '@mui/material';
+import { 
+  Container, 
+  Grid, 
+  Typography, 
+  Box, 
+  Paper, 
+  Chip,
+  Button,
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/router';
 import Chord from '../../components/Chordz/Chord';
+import Link from 'next/link';
 
 interface ChordData {
   frets: number[];
@@ -38,7 +48,7 @@ export default function ChordVisualization() {
   };
 
   const [chords, setChords] = useState<ChordData[]>([]);
-  const [notesDisplay, setNotesDisplay] = useState<string>('');
+  const [notesArray, setNotesArray] = useState<string[]>([]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -46,7 +56,7 @@ export default function ChordVisualization() {
 
     if (typeof notes !== 'string') return;
 
-    setNotesDisplay(notes.split('-').join(' - '));
+    setNotesArray(notes.split('-'));
 
     // For now, create a simple placeholder chord
     // The actual chord generation would need to be implemented in fretboard.ts
@@ -64,30 +74,90 @@ export default function ChordVisualization() {
   const renderChords = () => {
     if (chords.length === 0) {
       return (
-        <Typography variant="body1">
-          Chord visualization coming soon...
+        <Typography variant="body1" color="text.secondary">
+          Carregando...
         </Typography>
       );
     }
 
     return chords.map((chord, i) => (
-      <Grid item xs={6} sm={4} md={3} key={i}>
-        <Chord chord={chord} instrument={instrument} />
+      <Grid item xs={12} sm={6} md={4} key={i}>
+        <Paper 
+          sx={{ 
+            p: 3, 
+            display: 'flex', 
+            justifyContent: 'center',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 12px 24px rgba(0, 0, 0, 0.12)',
+            },
+          }}
+        >
+          <Chord chord={chord} instrument={instrument} />
+        </Paper>
       </Grid>
     ));
   };
 
   return (
-    <>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
       <Header />
-      <Container maxWidth="lg" className="container">
-        <Typography variant="h4" gutterBottom sx={{ mt: 4 }}>
-          Notes: {notesDisplay}
-        </Typography>
-        <Grid container spacing={4}>
+      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+        {/* Back Button */}
+        <Button
+          component={Link}
+          href="/chords"
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 3, color: 'text.secondary' }}
+        >
+          Voltar para acordes
+        </Button>
+
+        {/* Header */}
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            p: { xs: 3, md: 4 }, 
+            mb: 4,
+            background: 'linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%)',
+            borderRadius: 3,
+            color: 'white',
+          }}
+        >
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+            Visualização no Braço
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {notesArray.map((note, index) => (
+              <Chip 
+                key={index}
+                label={note}
+                sx={{ 
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                }}
+              />
+            ))}
+          </Box>
+        </Paper>
+
+        {/* Chord Diagrams */}
+        <Grid container spacing={3}>
           {renderChords()}
         </Grid>
+
+        {/* Info Box */}
+        <Box sx={{ mt: 4, p: 3, backgroundColor: '#fff', borderRadius: 2, boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)' }}>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Nota:</strong> A visualização mostra possíveis posições para tocar 
+            estas notas no cavaquinho (afinação D-G-B-D). Diferentes inversões e 
+            posições podem ser exploradas.
+          </Typography>
+        </Box>
       </Container>
-    </>
+    </Box>
   );
 }
