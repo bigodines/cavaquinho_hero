@@ -8,11 +8,13 @@ import {
   Paper, 
   Chip,
   Button,
+  Alert,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/router';
 import Chord from '../../components/Chordz/Chord';
 import Link from 'next/link';
+import { fretboard, TUNINGS, ChordVoicing, MAX_FRET_SPAN } from '../../lib/fretboard';
 
 interface ChordData {
   frets: number[];
@@ -32,23 +34,88 @@ interface Instrument {
   };
 }
 
+/**
+ * Detects potential barre chords in a fingering
+ * A barre is when the same fret is used on consecutive strings
+ */
+function detectBarres(frets: number[]): number[] {
+  const barres: number[] = [];
+  const fretCounts: Record<number, number[]> = {};
+  
+  // Group strings by fret (excluding open strings)
+  frets.forEach((fret, string) => {
+    if (fret > 0) {
+      if (!fretCounts[fret]) fretCounts[fret] = [];
+      fretCounts[fret].push(string);
+    }
+  });
+  
+  // A barre is when a fret appears on 2+ consecutive strings
+  for (const [fretStr, strings] of Object.entries(fretCounts)) {
+    const fret = parseInt(fretStr);
+    if (strings.length >= 2) {
+      // Check if strings are consecutive
+      strings.sort((a, b) => a - b);
+      let consecutive = true;
+      for (let i = 1; i < strings.length; i++) {
+        if (strings[i] - strings[i-1] !== 1) {
+          consecutive = false;
+          break;
+        }
+      }
+      if (consecutive) {
+        barres.push(fret);
+      }
+    }
+  }
+  
+  return barres;
+}
+
+/**
+ * Converts a ChordVoicing to the ChordData format expected by the Chord component
+ */
+function voicingToChordData(voicing: ChordVoicing): ChordData {
+  const baseFret = voicing.baseFret;
+  
+  // Normalize frets relative to baseFret for display (unless baseFret is 1)
+  // The Chord component expects frets relative to baseFret
+  const normalizedFrets = voicing.frets.map(f => {
+    if (f === 0) return 0; // Open string stays 0
+    if (baseFret === 1) return f; // No adjustment needed at first position
+    return f - baseFret + 1; // Adjust relative to baseFret
+  });
+  
+  return {
+    frets: normalizedFrets,
+    barres: detectBarres(normalizedFrets),
+    fingers: [], // Could be computed but left empty for now
+    capo: false,
+    baseFret: baseFret > 1 ? baseFret : undefined,
+  };
+}
+
 export default function ChordVisualization() {
   const router = useRouter();
 
-  const tuning = ['D', 'G', 'B', 'D'];
+  const tuning = TUNINGS.CAVAQUINHO;
+
+  const [chords, setChords] = useState<ChordData[]>([]);
+  // Dynamic fretsOnChord based on MAX_FRET_SPAN + 1 for padding
+  const [fretsOnChord, setFretsOnChord] = useState(MAX_FRET_SPAN + 1);
 
   const instrument: Instrument = {
     strings: tuning.length,
-    fretsOnChord: 12,
+    fretsOnChord,
     name: 'Cavaquinho',
     keys: [],
     tunings: {
       standard: tuning,
     },
   };
-
-  const [chords, setChords] = useState<ChordData[]>([]);
   const [notesArray, setNotesArray] = useState<string[]>([]);
+  const [rootNote, setRootNote] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -56,22 +123,63 @@ export default function ChordVisualization() {
 
     if (typeof notes !== 'string') return;
 
-    setNotesArray(notes.split('-'));
+    const notesList = notes.split('-');
+    setNotesArray(notesList);
+    // Extract the root note (first note) for the back link
+    if (notesList.length > 0) {
+      setRootNote(notesList[0]);
+    }
+    setError('');
 
-    // For now, create a simple placeholder chord
-    // The actual chord generation would need to be implemented in fretboard.ts
-    const placeholderChord: ChordData = {
-      frets: Array(tuning.length).fill(0),
-      barres: [],
-      fingers: [],
-      capo: false,
-      baseFret: 1,
-    };
+    // Use the fretboard module to generate chord voicings
+    const fb = fretboard(tuning);
+    const voicings = fb.draw(notesList);
+    
+    if (voicings.length === 0) {
+      setError('Não foi possível encontrar posições tocáveis para estas notas.');
+      setChords([]);
+      return;
+    }
 
-    setChords([placeholderChord]);
-  }, [router.isReady, router.query, tuning.length]);
+    // Calculate the max span across all voicings to set fretsOnChord
+    let maxSpan = 0;
+    for (const v of voicings) {
+      const frettedPositions = v.frets.filter(f => f > 0);
+      if (frettedPositions.length > 1) {
+        const span = Math.max(...frettedPositions) - Math.min(...frettedPositions);
+        maxSpan = Math.max(maxSpan, span);
+      }
+    }
+    // Set fretsOnChord to accommodate the largest span + 1 for padding
+    setFretsOnChord(Math.max(maxSpan + 2, MAX_FRET_SPAN + 1));
+
+    // Convert voicings to the format expected by the Chord component
+    const chordData = voicings.map(voicingToChordData);
+    
+    // Debug logging
+    console.log('=== CHORD PAGE DEBUG ===');
+    console.log('Input notes:', notesList);
+    console.log('Voicings from fretboard:', voicings.length);
+    voicings.forEach((v, i) => {
+      console.log(`  ${i + 1}. frets=${JSON.stringify(v.frets)} baseFret=${v.baseFret}`);
+    });
+    console.log('Converted ChordData:', chordData.length);
+    chordData.forEach((c, i) => {
+      console.log(`  ${i + 1}. frets=${JSON.stringify(c.frets)} baseFret=${c.baseFret}`);
+    });
+    
+    setChords(chordData);
+  }, [router.isReady, router.query, tuning]);
 
   const renderChords = () => {
+    if (error) {
+      return (
+        <Grid item xs={12}>
+          <Alert severity="warning">{error}</Alert>
+        </Grid>
+      );
+    }
+
     if (chords.length === 0) {
       return (
         <Typography variant="body1" color="text.secondary">
@@ -81,12 +189,13 @@ export default function ChordVisualization() {
     }
 
     return chords.map((chord, i) => (
-      <Grid item xs={12} sm={6} md={4} key={i}>
+      <Grid item xs={6} sm={4} md={3} key={i}>
         <Paper 
           sx={{ 
-            p: 3, 
+            p: 2, 
             display: 'flex', 
-            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             '&:hover': {
               transform: 'translateY(-4px)',
@@ -95,6 +204,11 @@ export default function ChordVisualization() {
           }}
         >
           <Chord chord={chord} instrument={instrument} />
+          {chord.baseFret && chord.baseFret > 1 && (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+              {chord.baseFret}ª casa
+            </Typography>
+          )}
         </Paper>
       </Grid>
     ));
@@ -107,7 +221,7 @@ export default function ChordVisualization() {
         {/* Back Button */}
         <Button
           component={Link}
-          href="/chords"
+          href={rootNote ? `/chords?note=${encodeURIComponent(rootNote)}` : '/chords'}
           startIcon={<ArrowBackIcon />}
           sx={{ mb: 3, color: 'text.secondary' }}
         >

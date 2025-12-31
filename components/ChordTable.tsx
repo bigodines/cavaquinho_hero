@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import * as chords from '../lib/chords';
 import type { Triad, Tetrad, Sixth } from '../lib/chords';
@@ -78,13 +79,33 @@ const chordCategories: Record<string, string[]> = {
 };
 
 export default function ChordTable() {
+  const router = useRouter();
   const [note, setNote] = useState('');
   const [chordsData, setChordsData] = useState<ChordsCollection>({});
   const [error, setError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize from URL query parameter
+  useEffect(() => {
+    if (router.isReady && !isInitialized) {
+      const queryNote = router.query.note;
+      if (typeof queryNote === 'string' && queryNote.length > 0) {
+        setNote(queryNote);
+      }
+      setIsInitialized(true);
+    }
+  }, [router.isReady, router.query.note, isInitialized]);
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
     setNote(value);
+    
+    // Update URL without navigation (shallow update)
+    if (value) {
+      router.replace({ query: { note: value } }, undefined, { shallow: true });
+    } else {
+      router.replace({ query: {} }, undefined, { shallow: true });
+    }
   };
 
   // Auto-generate chords when note changes
@@ -111,7 +132,7 @@ export default function ChordTable() {
       const chord = chordsData[key];
       if (!chord) return null;
 
-      const notes = Object.values(chord).join('-');
+      const notes = Object.values(chord).map(encodeURIComponent).join('-');
       const viz = `/chord/${notes}`;
       const displayNote = note[0].toUpperCase() + note.substring(1);
 

@@ -19,8 +19,8 @@ const offsets: Record<number, { x: number; y: number; length: number }> = {
 const getNeckHorizonalLine = (pos: number, strings: number): string =>
   `M ${offsets[strings]?.x ?? 0} ${12 * pos} H ${offsets[strings]?.length ?? 50}`;
 
-const getNeckVerticalLine = (pos: number, strings: number): string =>
-  `M ${(offsets[strings]?.y ?? 0) + pos * 10} 0 V 480`;
+const getNeckVerticalLine = (pos: number, strings: number, fretsOnChord: number): string =>
+  `M ${(offsets[strings]?.y ?? 0) + pos * 10} 0 V ${fretsOnChord * 12}`;
 
 const getNeckPath = (strings: number, fretsOnChord: number): string =>
   Array.from({ length: fretsOnChord + 1 })
@@ -28,7 +28,7 @@ const getNeckPath = (strings: number, fretsOnChord: number): string =>
     .join(' ')
     .concat(
       Array.from({ length: strings })
-        .map((_, pos) => getNeckVerticalLine(pos, strings))
+        .map((_, pos) => getNeckVerticalLine(pos, strings, fretsOnChord))
         .join(' ')
     );
 
