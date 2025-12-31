@@ -1,35 +1,107 @@
 # Cavaquinho Hero
 
+A music theory toolkit for learning and practicing chords, scales, and harmonic fields. Built with Next.js 15 and TypeScript.
+
+## Features
+
+- **Chord Generator**: Generate triads and tetrads (7th chords) for any note
+- **Harmonic Field Explorer**: Explore major and minor harmonic fields with diatonic chords, dominants, ii-V-I progressions, and substitutions
+- **Chord Visualization**: View chord shapes on a fretboard (beta)
+
+## Tech Stack
+
+- Next.js 15
+- React 18
+- TypeScript 5
+- Material UI 6
+- Jest for testing
+- Sass for styling
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18 or later
+- npm or yarn
+
+### Installation
 
 ```bash
-npm run dev
+npm install
+```
+
+### Development
+
+```bash
+# Run development server
+make run
 # or
-yarn dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Available Commands
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```bash
+make help         # Show all available commands
+make run          # Run development server
+make build        # Build for production
+make test         # Run tests
+make lint         # Run linter
+make type-check   # Run TypeScript type check (via npm run type-check)
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Testing
 
-## Learn More
+```bash
+npm test          # Run tests once
+npm test -- --watch  # Run tests in watch mode
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+├── components/     # React components
+│   ├── Header/     # Navigation header
+│   ├── ChordTable/ # Chord display table
+│   ├── HarmonicField/ # Harmonic field explorer
+│   └── Chordz/     # Chord visualization SVG components
+├── lib/            # Core music theory modules
+│   ├── scales.ts   # Scale generation (major, harmonic minor)
+│   ├── chords.ts   # Chord construction (triads, tetrads)
+│   ├── tonality.ts # Harmonic fields and progressions
+│   └── fretboard.ts # Fretboard representation
+├── pages/          # Next.js pages
+│   ├── index.tsx   # Home page
+│   ├── chords.tsx  # Chord generator
+│   ├── harmonic_field.tsx # Harmonic field explorer
+│   └── about.tsx   # About page
+└── styles/         # Global styles
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Music Theory Modules
 
-## Deploy on Vercel
+### Scales (`lib/scales.ts`)
+- `major(root)` - Generate major scale
+- `harmonicMinor(root)` - Generate harmonic minor scale
+- `isValidNote(note)` - Validate note
+- `noteAdd(note, semitones)` - Transpose a note
+- `enharmony(from, to)` - Find enharmonic equivalent
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Chords (`lib/chords.ts`)
+- Triads: `majorTriad`, `minorTriad`, `augmentedTriad`, `diminishedTriad`
+- Tetrads: `sevenTetrad`, `sevenMajorTetrad`, `minorSevenTetrad`, etc.
+- Sixth chords: `sixthTetrad`, `minorSixthTetrad`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Tonality (`lib/tonality.ts`)
+- `majorDiatonicScale(root)` - Major harmonic field
+- `harmonicMinorDiatonicScale(root)` - Minor harmonic field
+- `dominantChord(chord)` - Find V chord
+- `iiChord(chord)` - Find ii chord for ii-V-I
+- `subV(chord)` - Find tritone substitution
+
+## License
+
+MIT
+
