@@ -1,21 +1,12 @@
 # Cavaquinho Hero
 
-A music theory toolkit for learning and practicing chords, scales, and harmonic fields. Built with Next.js 15 and TypeScript.
+A music theory toolkit for cavaquininstas learning and practicing chords, scales, and harmonic fields.
 
 ## Features
 
 - **Chord Generator**: Generate triads and tetrads (7th chords) for any note
 - **Harmonic Field Explorer**: Explore major and minor harmonic fields with diatonic chords, dominants, ii-V-I progressions, and substitutions
 - **Chord Visualization**: View chord shapes on a fretboard (beta)
-
-## Tech Stack
-
-- Next.js 15
-- React 18
-- TypeScript 5
-- Material UI 6
-- Jest for testing
-- Sass for styling
 
 ## Getting Started
 
@@ -83,6 +74,7 @@ npm test -- --watch  # Run tests in watch mode
 ## Music Theory Modules
 
 ### Scales (`lib/scales.ts`)
+
 - `major(root)` - Generate major scale
 - `harmonicMinor(root)` - Generate harmonic minor scale
 - `isValidNote(note)` - Validate note
@@ -90,11 +82,13 @@ npm test -- --watch  # Run tests in watch mode
 - `enharmony(from, to)` - Find enharmonic equivalent
 
 ### Chords (`lib/chords.ts`)
+
 - Triads: `majorTriad`, `minorTriad`, `augmentedTriad`, `diminishedTriad`
 - Tetrads: `sevenTetrad`, `sevenMajorTetrad`, `minorSevenTetrad`, etc.
 - Sixth chords: `sixthTetrad`, `minorSixthTetrad`
 
 ### Tonality (`lib/tonality.ts`)
+
 - `majorDiatonicScale(root)` - Major harmonic field
 - `harmonicMinorDiatonicScale(root)` - Minor harmonic field
 - `dominantChord(chord)` - Find V chord
@@ -104,4 +98,3 @@ npm test -- --watch  # Run tests in watch mode
 ## License
 
 MIT
-
