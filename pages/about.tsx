@@ -86,23 +86,37 @@ export default function About() {
             Tecnologias
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph>
-            Este projeto foi construído com tecnologias modernas:
+            Este projeto foi construído com para rodar sem backend e hospedar de graça no GitHub.
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {['Next.js 15', 'React 18', 'TypeScript', 'Material UI 6', 'Sass'].map((tech) => (
-              <Box 
+            {['https://github.com/bigodines/cavaquinho_hero', 'https://www.imbigo.net'].map((tech) => (
+              <a
                 key={tech}
-                sx={{ 
-                  px: 2, 
-                  py: 1, 
-                  backgroundColor: '#f8f9fa', 
-                  borderRadius: 2,
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
+                href={tech}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
                 }}
               >
-                {tech}
-              </Box>
+                <Box
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: 2,
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    transition: 'background 0.2s',
+                    '&:hover': {
+                      backgroundColor: '#e2e6ea',
+                    },
+                  }}
+                >
+                  {tech}
+                </Box>
+              </a>
             ))}
           </Box>
         </Paper>
