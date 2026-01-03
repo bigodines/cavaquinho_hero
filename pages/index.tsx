@@ -161,7 +161,7 @@ export default function Home() {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Feito com ♥ para músicos
+          Feito com ♥ para músicos(as) e futuros músicos(as)
         </Typography>
       </Box>
     </Box>
