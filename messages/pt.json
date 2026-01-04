@@ -1,0 +1,76 @@
+{
+  "header": {
+    "chords": "Acordes",
+    "harmonicField": "Campo Harmônico",
+    "about": "Sobre"
+  },
+  "home": {
+    "title": "Cavaquinho Hero",
+    "subtitle": "Sua ferramenta completa para estudar teoria musical, construir acordes e explorar campos harmônicos.",
+    "featuresTitle": "Funcionalidades",
+    "featuresSubtitle": "Explore as ferramentas disponíveis para aprimorar seu conhecimento musical",
+    "chordGenerator": {
+      "title": "Gerador de Acordes",
+      "description": "Digite uma nota e veja todas as tríades, tétrades e acordes com sexta possíveis. Visualize no braço do cavaquinho."
+    },
+    "harmonicField": {
+      "title": "Campo Harmônico",
+      "description": "Explore os acordes diatônicos, dominantes secundários, II cadenciais e substituições de qualquer tonalidade."
+    },
+    "footer": "Feito com ♥ para músicos(as) e futuros músicos(as)"
+  },
+  "chordTable": {
+    "title": "Gerador de Acordes",
+    "subtitle": "Digite uma nota para ver todos os acordes possíveis",
+    "placeholder": "Ex: C, Eb, F#...",
+    "emptyState": "Digite uma nota acima para começar",
+    "error": "Nota inválida. Use: C, D, E, F, G, A, B (com # ou b)",
+    "categories": {
+      "triads": "Tríades",
+      "sevenths": "Tétrades (7ª)",
+      "sixths": "Acordes com 6ª"
+    },
+    "table": {
+      "chord": "Acorde",
+      "notes": "Notas",
+      "visualize": "Visualizar",
+      "viewOnFretboard": "Ver no braço"
+    }
+  },
+  "about": {
+    "title": "Sobre o Projeto",
+    "subtitle": "O Cavaquinho Hero é uma ferramenta de teoria musical projetada para ajudar músicos a entender acordes, escalas e campos harmônicos.",
+    "featuresTitle": "Funcionalidades",
+    "features": [
+      "Gerar tríades e tétrades para qualquer nota",
+      "Explorar campos harmônicos maiores e menores",
+      "Aprender sobre progressões e dominantes secundários",
+      "Visualizar acordes no braço do cavaquinho",
+      "Descobrir substituições como SubV e diminutos preparatórios"
+    ],
+    "techTitle": "Tecnologias",
+    "techDescription": "Este projeto foi construído com para rodar sem backend e hospedar de graça no GitHub."  },
+  "harmonicField": {
+    "title": "Campo Harmônico",
+    "subtitle": "Explore as progressões harmônicas de qualquer tonalidade",
+    "placeholder": "Ex: C, Am, Eb, F#m...",
+    "error": "Nota inválida. Use: C, D, E, F, G, A, B (com # ou b, ex: Am, Eb)",
+    "mode": {
+      "major": "Maior",
+      "minor": "Menor"
+    },
+    "function": "Função",
+    "diatonicChords": "Acordes Diatônicos",
+    "dominants": "Dominantes (V7)",
+    "cadentialII": "II Cadencial",
+    "subV": "SubV",
+    "majorField": "Campo Maior",
+    "minorScales": "3 Escalas Menores",
+    "naturalMinor": "Menor Natural (Eólio)",
+    "harmonicMinor": "Menor Harmônica",
+    "melodicMinor": "Menor Melódica",
+    "tip": "Dica",
+    "tipText": "Use os dominantes secundários para criar tensão harmônica antes de resolver em qualquer acorde do campo. O SubV é o substituto tritonal do dominante e pode ser usado para adicionar cor às suas progressões.",
+    "emptyState": "Digite uma nota acima para explorar o campo harmônico",
+    "emptyStateTip": "Dica: Digite \"Am\" para ver automaticamente o campo menor de Lá"  }
+}

@@ -1,0 +1,78 @@
+{
+  "header": {
+    "chords": "Chords",
+    "harmonicField": "Harmonic Field",
+    "about": "About"
+  },
+  "home": {
+    "title": "Cavaquinho Hero",
+    "subtitle": "Your complete tool to study music theory, build chords and explore harmonic fields.",
+    "featuresTitle": "Features",
+    "featuresSubtitle": "Explore the available tools to improve your musical knowledge",
+    "chordGenerator": {
+      "title": "Chord Generator",
+      "description": "Enter a note and see all possible triads, tetrads, and sixth chords. Visualize them on the cavaquinho fretboard."
+    },
+    "harmonicField": {
+      "title": "Harmonic Field",
+      "description": "Explore diatonic chords, secondary dominants, cadential II chords, and substitutions in any key."
+    },
+    "footer": "Made with ♥ for musicians and future musicians"
+  },
+  "chordTable": {
+    "title": "Chord Generator",
+    "subtitle": "Enter a note to see all possible chords",
+    "placeholder": "Ex: C, Eb, F#...",
+    "emptyState": "Enter a note above to start",
+    "error": "Invalid note. Use: C, D, E, F, G, A, B (with # or b)",
+    "categories": {
+      "triads": "Triads",
+      "sevenths": "Seventh Chords",
+      "sixths": "Sixth Chords"
+    },
+    "table": {
+      "chord": "Chord",
+      "notes": "Notes",
+      "visualize": "Visualize",
+      "viewOnFretboard": "View on fretboard"
+    }
+  },
+  "about": {
+    "title": "About the Project",
+    "subtitle": "Cavaquinho Hero is a music theory tool designed to help musicians understand chords, scales, and harmonic fields.",
+    "featuresTitle": "Features",
+    "features": [
+      "Generate triads and tetrads for any note",
+      "Explore major and minor harmonic fields",
+      "Learn about progressions and secondary dominants",
+      "Visualize chords on the cavaquinho fretboard",
+      "Discover substitutions like SubV and preparatory diminished chords"
+    ],
+    "techTitle": "Technologies",
+    "techDescription": "This project was built to run without a backend and host for free on GitHub."
+  },
+  "harmonicField": {
+    "title": "Harmonic Field",
+    "subtitle": "Explore harmonic progressions in any key",
+    "placeholder": "Ex: C, Am, Eb, F#m...",
+    "error": "Invalid note. Use: C, D, E, F, G, A, B (with # or b, ex: Am, Eb)",
+    "mode": {
+      "major": "Major",
+      "minor": "Minor"
+    },
+    "function": "Function",
+    "diatonicChords": "Diatonic Chords",
+    "dominants": "Dominants (V7)",
+    "cadentialII": "Cadential II",
+    "subV": "SubV",
+    "majorField": "Major Field",
+    "minorScales": "3 Minor Scales",
+    "naturalMinor": "Natural Minor (Aeolian)",
+    "harmonicMinor": "Harmonic Minor",
+    "melodicMinor": "Melodic Minor",
+    "tip": "Tip",
+    "tipText": "Use secondary dominants to create harmonic tension before resolving to any chord in the field. SubV is the tritone substitution of the dominant and can be used to add color to your progressions.",
+    "emptyState": "Enter a note above to explore the harmonic field",
+    "emptyStateTip": "Tip: Type \"Am\" to automatically see the A minor field"
+  }
+}

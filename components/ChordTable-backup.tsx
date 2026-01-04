@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Table,
   TableBody,
@@ -17,11 +15,11 @@ import {
 } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import * as chords from '../lib/chords';
 import type { Triad, Tetrad, Sixth } from '../lib/chords';
 import { isValidNote } from '../lib/scales';
-import { useTranslations, useLocale } from 'next-intl';
 
 type ChordResult = Triad | Tetrad | Sixth | null;
 
@@ -74,15 +72,14 @@ function generateChords(n: string): ChordsCollection {
   };
 }
 
-const chordCategories = (t: ReturnType<typeof useTranslations>): Record<string, string[]> => ({
-  [t('chordTable.categories.triads')]: ['', 'm', '+', '°'],
-  [t('chordTable.categories.sevenths')]: ['7', '7M', 'm7', 'm7+', '7(#5)', '7+(#5)', 'Ø', 'o', '7(b5)'],
-  [t('chordTable.categories.sixths')]: ['6', 'm6'],
-});
+const chordCategories: Record<string, string[]> = {
+  'Tríades': ['', 'm', '+', '°'],
+  'Tétrades (7ª)': ['7', '7M', 'm7', 'm7+', '7(#5)', '7+(#5)', 'Ø', 'o', '7(b5)'],
+  'Acordes com 6ª': ['6', 'm6'],
+};
 
 export default function ChordTable() {
-  const t = useTranslations();
-  const locale = useLocale();
+  const router = useRouter();
   const [note, setNote] = useState('');
   const [chordsData, setChordsData] = useState<ChordsCollection>({});
   const [error, setError] = useState<string | null>(null);
@@ -90,29 +87,25 @@ export default function ChordTable() {
 
   // Initialize from URL query parameter
   useEffect(() => {
-    // Parse query string from pathname since we're using app router
-    const searchParams = new URLSearchParams(window.location.search);
-    const queryNote = searchParams.get('note');
-    if (queryNote && !isInitialized) {
-      setNote(queryNote);
-      setIsInitialized(true);
-    } else if (!isInitialized) {
+    if (router.isReady && !isInitialized) {
+      const queryNote = router.query.note;
+      if (typeof queryNote === 'string' && queryNote.length > 0) {
+        setNote(queryNote);
+      }
       setIsInitialized(true);
     }
-  }, [isInitialized]);
+  }, [router.isReady, router.query.note, isInitialized]);
 
   const handleNoteChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
     setNote(value);
     
-    // Update URL without navigation using History API
-    const url = new URL(window.location.href);
+    // Update URL without navigation (shallow update)
     if (value) {
-      url.searchParams.set('note', value);
+      router.replace({ query: { note: value } }, undefined, { shallow: true });
     } else {
-      url.searchParams.delete('note');
+      router.replace({ query: {} }, undefined, { shallow: true });
     }
-    window.history.replaceState({}, '', url.toString());
   };
 
   // Auto-generate chords when note changes
@@ -120,7 +113,7 @@ export default function ChordTable() {
     if (note.length > 0) {
       const c = generateChords(note);
       if (Object.keys(c).length === 0) {
-        setError(t('chordTable.error'));
+        setError('Nota inválida. Use: C, D, E, F, G, A, B (com # ou b)');
         setChordsData({});
       } else {
         setError(null);
@@ -130,7 +123,7 @@ export default function ChordTable() {
       setError(null);
       setChordsData({});
     }
-  }, [note, t]);
+  }, [note]);
 
   const hasChords = useMemo(() => Object.keys(chordsData).length > 0, [chordsData]);
 
@@ -140,7 +133,7 @@ export default function ChordTable() {
       if (!chord) return null;
 
       const notes = Object.values(chord).map(encodeURIComponent).join('-');
-      const viz = `/${locale}/chord-viz?notes=${notes}`;
+      const viz = `/chord/${notes}`;
       const displayNote = note[0].toUpperCase() + note.substring(1);
 
       return (
@@ -168,7 +161,7 @@ export default function ChordTable() {
               alignItems: 'center',
               gap: 4,
             }}>
-              {t('chordTable.table.viewOnFretboard')} →
+              Ver no braço →
             </Link>
           </TableCell>
         </TableRow>
@@ -190,13 +183,13 @@ export default function ChordTable() {
         }}
       >
         <Typography variant="h5" sx={{ color: 'white', mb: 1, fontWeight: 600 }}>
-          {t('chordTable.title')}
+          Gerador de Acordes
         </Typography>
         <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3 }}>
-          {t('chordTable.subtitle')}
+          Digite uma nota para ver todos os acordes possíveis
         </Typography>
         <TextField
-          placeholder={t('chordTable.placeholder')}
+          placeholder="Ex: C, Eb, F#..."
           variant="outlined"
           name="rootNote"
           value={note}
@@ -224,7 +217,7 @@ export default function ChordTable() {
       {/* Results */}
       <Fade in={hasChords} timeout={300}>
         <Box>
-          {hasChords && Object.entries(chordCategories(t)).map(([category, keys]) => (
+          {hasChords && Object.entries(chordCategories).map(([category, keys]) => (
             <Paper key={category} sx={{ mb: 3, overflow: 'hidden' }}>
               <Box sx={{ 
                 px: 3, 
@@ -240,9 +233,9 @@ export default function ChordTable() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ width: '25%' }}>{t('chordTable.table.chord')}</TableCell>
-                      <TableCell sx={{ width: '50%' }}>{t('chordTable.table.notes')}</TableCell>
-                      <TableCell align="right" sx={{ width: '25%' }}>{t('chordTable.table.visualize')}</TableCell>
+                      <TableCell sx={{ width: '25%' }}>Acorde</TableCell>
+                      <TableCell sx={{ width: '50%' }}>Notas</TableCell>
+                      <TableCell align="right" sx={{ width: '25%' }}>Visualizar</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -260,7 +253,7 @@ export default function ChordTable() {
         <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
           <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
           <Typography variant="body1">
-            {t('chordTable.emptyState')}
+            Digite uma nota acima para começar
           </Typography>
         </Box>
       )}
