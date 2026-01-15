@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Table,
   TableBody,
@@ -17,6 +19,7 @@ import {
 } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import React, { useEffect, useState, ChangeEvent } from 'react';
+import { useTranslations } from 'next-intl';
 
 import {
   majorDiatonicScale,
@@ -68,6 +71,7 @@ interface MinorScales {
 }
 
 export default function HarmonicField() {
+  const t = useTranslations('harmonicField');
   const [rawInput, setRawInput] = useState('');
   const [rootNote, setRootNote] = useState<string | null>(null);
   const [mode, setMode] = useState<ScaleMode>('major');
@@ -88,7 +92,7 @@ export default function HarmonicField() {
     setRootNote(root);
     
     if (value && !root) {
-      setError('Nota inválida. Use: C, D, E, F, G, A, B (com # ou b, ex: Am, Eb)');
+      setError(t('error'));
     } else {
       setError(null);
     }
@@ -215,7 +219,7 @@ export default function HarmonicField() {
                   zIndex: 2,
                 }}
               >
-                Função
+                {t('function')}
               </TableCell>
               {degrees.map((degree) => (
                 <TableCell 
@@ -229,7 +233,7 @@ export default function HarmonicField() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderHarmonicRow(chords, 'Acordes Diatônicos', (chord) => (
+            {renderHarmonicRow(chords, t('diatonicChords'), (chord) => (
               <Chip 
                 label={chord} 
                 size="small" 
@@ -242,19 +246,19 @@ export default function HarmonicField() {
             
             {showSecondaryDominants && (
               <>
-                {renderHarmonicRow(chords, 'Dominantes (V7)', (chord) => (
+                {renderHarmonicRow(chords, t('dominants'), (chord) => (
                   <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
                     {dominantChord(chord)}
                   </Typography>
                 ))}
                 
-                {renderHarmonicRow(chords, 'II Cadencial', (chord) => (
+                {renderHarmonicRow(chords, t('cadentialII'), (chord) => (
                   <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
                     {iiChord(chord)}
                   </Typography>
                 ))}
                 
-                {renderHarmonicRow(chords, 'SubV', (chord) => (
+                {renderHarmonicRow(chords, t('subV'), (chord) => (
                   <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
                     {subV(chord)}
                   </Typography>
@@ -281,10 +285,10 @@ export default function HarmonicField() {
         }}
       >
         <Typography variant="h5" sx={{ color: 'white', mb: 1, fontWeight: 600 }}>
-          Campo Harmônico
+          {t('title')}
         </Typography>
         <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3 }}>
-          Explore as progressões harmônicas de qualquer tonalidade
+          {t('subtitle')}
         </Typography>
         
         <Box sx={{ 
@@ -295,7 +299,7 @@ export default function HarmonicField() {
           alignItems: 'center',
         }}>
           <TextField
-            placeholder="Ex: C, Am, Eb, F#m..."
+            placeholder={t('placeholder')}
             variant="outlined"
             name="rootNote"
             value={rawInput}
@@ -340,8 +344,8 @@ export default function HarmonicField() {
               },
             }}
           >
-            <ToggleButton value="major">Maior</ToggleButton>
-            <ToggleButton value="minor">Menor</ToggleButton>
+            <ToggleButton value="major">{t('mode.major')}</ToggleButton>
+            <ToggleButton value="minor">{t('mode.minor')}</ToggleButton>
           </ToggleButtonGroup>
         </Box>
       </Paper>
@@ -354,10 +358,10 @@ export default function HarmonicField() {
             <>
               <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {displayNote} Maior
+                  {displayNote} {t('mode.major')}
                 </Typography>
                 <Chip 
-                  label="Campo Maior"
+                  label={t('majorField')}
                   size="small"
                   color="primary"
                 />
@@ -376,10 +380,10 @@ export default function HarmonicField() {
             <>
               <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {displayNote} Menor
+                  {displayNote} {t('mode.minor')}
                 </Typography>
                 <Chip 
-                  label="3 Escalas Menores"
+                  label={t('minorScales')}
                   size="small"
                   color="secondary"
                 />
@@ -387,21 +391,21 @@ export default function HarmonicField() {
 
               {renderScaleTable(
                 minorScales.natural,
-                `${displayNote} Menor Natural (Eólio)`,
+                `${displayNote} ${t('naturalMinor')}`,
                 'Im7 - IIm7(b5) - III7M - IVm7 - Vm7 - VI7M - VII7',
                 true
               )}
 
               {renderScaleTable(
                 minorScales.harmonic,
-                `${displayNote} Menor Harmônica`,
+                `${displayNote} ${t('harmonicMinor')}`,
                 'Im7M - IIm7(b5) - III7M(#5) - IVm7 - V7 - VI7M - VIIdim7',
                 true
               )}
 
               {renderScaleTable(
                 minorScales.melodic,
-                `${displayNote} Menor Melódica`,
+                `${displayNote} ${t('melodicMinor')}`,
                 'Im7M - IIm7 - III7M(#5) - IV7 - V7 - VIm7(b5) - VIIm7(b5)',
                 true
               )}
@@ -410,9 +414,7 @@ export default function HarmonicField() {
 
           <Box sx={{ mt: 3, p: 2, backgroundColor: '#f8f9fa', borderRadius: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              <strong>Dica:</strong> Use os dominantes secundários para criar tensão harmônica 
-              antes de resolver em qualquer acorde do campo. O SubV é o substituto tritonal 
-              do dominante e pode ser usado para adicionar cor às suas progressões.
+              <strong>{t('tip')}:</strong> {t('tipText')}
             </Typography>
           </Box>
         </Box>
@@ -423,10 +425,10 @@ export default function HarmonicField() {
         <Box sx={{ textAlign: 'center', py: 8, color: 'text.secondary' }}>
           <MusicNoteIcon sx={{ fontSize: 64, opacity: 0.3, mb: 2 }} />
           <Typography variant="body1">
-            Digite uma nota acima para explorar o campo harmônico
+            {t('emptyState')}
           </Typography>
           <Typography variant="body2" sx={{ mt: 1, opacity: 0.7 }}>
-            Dica: Digite &quot;Am&quot; para ver automaticamente o campo menor de Lá
+            {t('emptyStateTip')}
           </Typography>
         </Box>
       )}

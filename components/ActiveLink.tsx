@@ -1,4 +1,6 @@
-import { useRouter } from 'next/router';
+'use client';
+
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import React, { Children, ReactElement, cloneElement } from 'react';
 
@@ -10,18 +12,18 @@ interface ActiveLinkProps {
 }
 
 const ActiveLink: React.FC<ActiveLinkProps> = ({ children, activeClassName, href, as, ...props }) => {
-  const { asPath } = useRouter();
+  const pathname = usePathname();
   const child = Children.only(children);
   const childClassName = (child.props as Record<string, unknown>).className || '';
 
   // Apply active class if current path matches href or as prop
   const className =
-    asPath === href || asPath === as
+    pathname === href || pathname === as
       ? `${childClassName} ${activeClassName}`.trim()
       : childClassName;
 
   return (
-    <Link href={href} as={as} {...props}>
+    <Link href={href} {...props}>
       {cloneElement(child, {
         className: className || undefined,
       })}
