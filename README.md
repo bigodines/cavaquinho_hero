@@ -1,5 +1,7 @@
 # Cavaquinho Hero
 
+See it live at: [https://bigodines.github.io/cavaquinho_hero/](https://bigodines.github.io/cavaquinho_hero/)
+
 A music theory toolkit for cavaquininstas learning and practicing chords, scales, and harmonic fields.
 
 ## Features
