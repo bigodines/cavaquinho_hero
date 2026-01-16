@@ -34,7 +34,14 @@
       "chord": "Acorde",
       "notes": "Notas",
       "visualize": "Visualizar",
-      "viewOnFretboard": "Ver no braço"
+      "viewOnFretboard": "Ver no braço (beta)"
+    },
+    "instrument": {
+      "label": "Instrumento",
+      "cavaquinho": "Cavaquinho",
+      "mandolin": "Bandolim",
+      "ukulele": "Ukulele",
+      "guitar": "Violão"
     }
   },
   "about": {

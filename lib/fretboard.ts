@@ -384,7 +384,40 @@ export const TUNINGS = {
   GUITAR_DROP_D: ['D', 'A', 'D', 'G', 'B', 'E'],
   UKULELE_STANDARD: ['G', 'C', 'E', 'A'],
   CAVAQUINHO: ['D', 'G', 'B', 'D'], // Portuguese tuning
+  MANDOLIN: ['G', 'D', 'A', 'E'], // Standard mandolin tuning (pairs tuned in unison)
   BASS_STANDARD: ['E', 'A', 'D', 'G'],
+};
+
+// Instrument definitions with their tunings and display names
+export type InstrumentKey = 'cavaquinho' | 'mandolin' | 'ukulele' | 'guitar';
+
+export interface InstrumentDefinition {
+  key: InstrumentKey;
+  tuning: string[];
+  tuningDisplay: string;
+}
+
+export const INSTRUMENTS: Record<InstrumentKey, InstrumentDefinition> = {
+  cavaquinho: {
+    key: 'cavaquinho',
+    tuning: TUNINGS.CAVAQUINHO,
+    tuningDisplay: 'D-G-B-D',
+  },
+  mandolin: {
+    key: 'mandolin',
+    tuning: TUNINGS.MANDOLIN,
+    tuningDisplay: 'G-D-A-E',
+  },
+  ukulele: {
+    key: 'ukulele',
+    tuning: TUNINGS.UKULELE_STANDARD,
+    tuningDisplay: 'G-C-E-A',
+  },
+  guitar: {
+    key: 'guitar',
+    tuning: TUNINGS.GUITAR_STANDARD,
+    tuningDisplay: 'E-A-D-G-B-E',
+  },
 };
 
 // Legacy export for backward compatibility

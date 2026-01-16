@@ -34,7 +34,14 @@
       "chord": "Chord",
       "notes": "Notes",
       "visualize": "Visualize",
-      "viewOnFretboard": "View on fretboard"
+      "viewOnFretboard": "View on fretboard (beta)"
+    },
+    "instrument": {
+      "label": "Instrument",
+      "cavaquinho": "Cavaquinho",
+      "mandolin": "Mandolin",
+      "ukulele": "Ukulele",
+      "guitar": "Guitar"
     }
   },
   "about": {

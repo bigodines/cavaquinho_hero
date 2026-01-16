@@ -93,10 +93,11 @@ export default function ChordTable() {
     // Parse query string from pathname since we're using app router
     const searchParams = new URLSearchParams(window.location.search);
     const queryNote = searchParams.get('note');
-    if (queryNote && !isInitialized) {
-      setNote(queryNote);
-      setIsInitialized(true);
-    } else if (!isInitialized) {
+    
+    if (!isInitialized) {
+      if (queryNote) {
+        setNote(queryNote);
+      }
       setIsInitialized(true);
     }
   }, [isInitialized]);
