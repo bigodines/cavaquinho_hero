@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Cavaquinho Hero',
@@ -18,6 +19,21 @@ export default function RootLayout({
 }) {
   return (
     <html>
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4XRC04XERD"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4XRC04XERD');
+          `}
+        </Script>
+      </head>
       <body>{children}</body>
     </html>
   );
