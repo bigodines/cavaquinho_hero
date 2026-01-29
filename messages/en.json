@@ -2,6 +2,7 @@
   "header": {
     "chords": "Chords",
     "harmonicField": "Harmonic Field",
+    "earTraining": "Ear Training",
     "about": "About"
   },
   "home": {
@@ -16,6 +17,10 @@
     "harmonicField": {
       "title": "Harmonic Field",
       "description": "Explore diatonic chords, secondary dominants, cadential II chords, and substitutions in any key."
+    },
+    "earTraining": {
+      "title": "Ear Training",
+      "description": "12-week structured program to develop your musical ear with drones, pitch matching, and interval recognition."
     },
     "footer": "Made with ♥ for musicians and future musicians"
   },
@@ -81,5 +86,57 @@
     "tipText": "Use secondary dominants to create harmonic tension before resolving to any chord in the field. SubV is the tritone substitution of the dominant and can be used to add color to your progressions.",
     "emptyState": "Enter a note above to explore the harmonic field",
     "emptyStateTip": "Tip: Type \"Am\" to automatically see the A minor field"
+  },
+  "earTraining": {
+    "title": "Ear Training",
+    "subtitle": "12-week program to develop your musical ear",
+    "droneControl": "Drone & Pitch Control",
+    "key": "Key",
+    "octave": "Octave",
+    "waveform": "Waveform",
+    "sine": "Sine",
+    "triangle": "Triangle",
+    "square": "Square",
+    "startDrone": "Start Drone",
+    "stopDrone": "Stop Drone",
+    "playDegrees": "Play Scale Degrees",
+    "playChords": "Play Chords",
+    "majorTriad": "Major",
+    "minorTriad": "Minor",
+    "week": "Week",
+    "currentWeek": "Current Week",
+    "minutes": "min",
+    "block": "Block",
+    "blocks": "blocks",
+    "tips": "Tips",
+    "markDayComplete": "Mark Day Complete",
+    "dayStreak": "Day Streak",
+    "daysCompleted": "Days Completed",
+    "hoursTotal": "Hours Total",
+    "minutesTotal": "Minutes Total",
+    "currentWeekProgress": "Week Progress",
+    "settings": "Settings",
+    "practice": "Today's Practice",
+    "program": "Full Program",
+    "strudelPatterns": "Strudel Patterns",
+    "todaysFocus": "Today's Focus",
+    "fullProgram": "12-Week Ear Training Program",
+    "programDescription": "A structured approach to developing pitch accuracy, tonic anchoring, and playing by ear.",
+    "strudelIntegration": "Strudel Integration",
+    "strudelDescription": "Use these patterns in Strudel to practice ear training with live coding.",
+    "dronePatternTitle": "Drone Pattern",
+    "dronePatternDesc": "A sustained note for pitch matching exercises.",
+    "degreesPatternTitle": "Scale Degrees (1-3-5-8)",
+    "degreesPatternDesc": "Practice singing and recognizing basic scale degrees.",
+    "majorMinorPatternTitle": "Major vs Minor Triads",
+    "majorMinorPatternDesc": "Compare major and minor chord qualities.",
+    "openInStrudel": "Open in Strudel",
+    "tip": "Tip",
+    "strudelTip": "Visit strudel.cc to experiment with these patterns. You can modify the notes and tempos to match your practice needs!",
+    "settingsDescription": "Configure your ear training preferences.",
+    "preferredKey": "Preferred Key",
+    "dangerZone": "Danger Zone",
+    "resetProgress": "Reset All Progress",
+    "close": "Close"
   }
 }

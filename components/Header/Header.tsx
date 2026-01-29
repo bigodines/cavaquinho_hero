@@ -40,6 +40,10 @@ const headersData: HeaderData[] = [
     href: '/harmonic_field',
   },
   {
+    labelKey: 'header.earTraining',
+    href: '/ear-training',
+  },
+  {
     labelKey: 'header.about',
     href: '/about',
   },
