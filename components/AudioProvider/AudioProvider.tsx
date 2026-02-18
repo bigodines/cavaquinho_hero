@@ -11,6 +11,7 @@ interface AudioContextValue {
   playMinorTriad: (root: string, octave: number, duration?: number) => void;
   startDrone: (note: string, octave: number, waveform?: WaveformType) => void;
   stopDrone: () => void;
+  setDroneVolume: (volume: number) => void;
   isDronePlaying: boolean;
   stopAll: () => void;
 }
@@ -33,6 +34,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const audioContextRef = useRef<globalThis.AudioContext | null>(null);
   const droneOscillatorRef = useRef<OscillatorNode | null>(null);
   const droneGainRef = useRef<GainNode | null>(null);
+  const droneVolumeRef = useRef(0.2);
   const activeOscillatorsRef = useRef<OscillatorNode[]>([]);
   const [isDronePlaying, setIsDronePlaying] = useState(false);
 
@@ -183,7 +185,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     oscillator.type = waveform;
     oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
     gainNode.gain.setValueAtTime(0, ctx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.5); // Fade in
+    gainNode.gain.linearRampToValueAtTime(droneVolumeRef.current, ctx.currentTime + 0.5); // Fade in
 
     oscillator.connect(gainNode);
     gainNode.connect(ctx.destination);
@@ -192,6 +194,16 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     droneOscillatorRef.current = oscillator;
     droneGainRef.current = gainNode;
     setIsDronePlaying(true);
+  }, [getAudioContext]);
+
+  const setDroneVolume = useCallback((volume: number) => {
+    const clamped = Math.max(0, Math.min(1, volume));
+    droneVolumeRef.current = clamped;
+
+    if (droneGainRef.current) {
+      const ctx = getAudioContext();
+      droneGainRef.current.gain.linearRampToValueAtTime(clamped, ctx.currentTime + 0.08);
+    }
   }, [getAudioContext]);
 
   const stopDrone = useCallback(() => {
@@ -229,6 +241,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     playMinorTriad,
     startDrone,
     stopDrone,
+    setDroneVolume,
     isDronePlaying,
     stopAll,
   };

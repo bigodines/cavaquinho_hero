@@ -117,6 +117,7 @@
     "currentWeekProgress": "Week Progress",
     "settings": "Settings",
     "practice": "Today's Practice",
+    "practiceTools": "Practice Tools",
     "program": "Full Program",
     "strudelPatterns": "Strudel Patterns",
     "todaysFocus": "Today's Focus",
@@ -137,6 +138,18 @@
     "preferredKey": "Preferred Key",
     "dangerZone": "Danger Zone",
     "resetProgress": "Reset All Progress",
-    "close": "Close"
+    "close": "Close",
+    "pitchDetector": {
+      "title": "Pitch Detector",
+      "start": "Start",
+      "stop": "Stop",
+      "inTune": "In tune",
+      "sharp": "sharp",
+      "flat": "flat",
+      "permissionDenied": "Microphone access denied. Please allow microphone access to use the pitch detector.",
+      "clickToStart": "Click \"Start\" to begin pitch detection",
+      "helpText": "Sing or play a note and watch your pitch in real-time. Green line shows the target pitch.",
+      "target": "Target"
+    }
   }
 }

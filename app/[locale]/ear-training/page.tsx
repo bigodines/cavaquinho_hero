@@ -34,6 +34,7 @@ import {
   Paper,
   Divider,
   Tooltip,
+  Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -48,6 +49,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Header from '../../../components/Header/Header';
 import { AudioProvider, useAudio } from '../../../components/AudioProvider/AudioProvider';
+import PitchDetector from '../../../components/PitchDetector/PitchDetector';
 import {
   TWELVE_WEEK_PROGRAM,
   WeeklyPlan,
@@ -244,19 +246,18 @@ function WeekCard({ plan, isCurrentWeek, onComplete }: {
           <Accordion key={idx} sx={{ mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-                <IconButton
+                <Checkbox
                   size="small"
+                  checked={completedBlocks.includes(idx)}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleBlock(idx);
                   }}
-                >
-                  {completedBlocks.includes(idx) ? (
-                    <CheckCircleIcon color="success" />
-                  ) : (
-                    <RadioButtonUncheckedIcon />
-                  )}
-                </IconButton>
+                  icon={<RadioButtonUncheckedIcon />}
+                  checkedIcon={<CheckCircleIcon />}
+                  color="success"
+                  sx={{ p: 0.5 }}
+                />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1">
                     {t('block')} {idx + 1}: {block.name}
@@ -454,12 +455,33 @@ function EarTrainingContent() {
             </Typography>
           </Alert>
 
-          <DroneControl />
-          
           <WeekCard 
             plan={currentWeekPlan} 
             isCurrentWeek={true}
             onComplete={handleDayComplete}
+          />
+
+          <Typography variant="h6" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            📻 {t('practiceTools')}
+          </Typography>
+
+          <DroneControl />
+          
+          <PitchDetector 
+            targetNote={progress.settings.preferredKey}
+            targetOctave={3}
+            labels={{
+              title: t('pitchDetector.title'),
+              start: t('pitchDetector.start'),
+              stop: t('pitchDetector.stop'),
+              inTune: t('pitchDetector.inTune'),
+              sharp: t('pitchDetector.sharp'),
+              flat: t('pitchDetector.flat'),
+              permissionDenied: t('pitchDetector.permissionDenied'),
+              clickToStart: t('pitchDetector.clickToStart'),
+              helpText: t('pitchDetector.helpText'),
+              target: t('pitchDetector.target'),
+            }}
           />
         </TabPanel>
 

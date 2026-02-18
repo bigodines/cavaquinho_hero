@@ -116,6 +116,7 @@
     "currentWeekProgress": "Progresso Semanal",
     "settings": "Configurações",
     "practice": "Prática de Hoje",
+    "practiceTools": "Ferramentas de Prática",
     "program": "Programa Completo",
     "strudelPatterns": "Padrões Strudel",
     "todaysFocus": "Foco de Hoje",
@@ -136,6 +137,18 @@
     "preferredKey": "Tom Preferido",
     "dangerZone": "Zona de Perigo",
     "resetProgress": "Resetar Todo o Progresso",
-    "close": "Fechar"
+    "close": "Fechar",
+    "pitchDetector": {
+      "title": "Detector de Afinação",
+      "start": "Iniciar",
+      "stop": "Parar",
+      "inTune": "Afinado",
+      "sharp": "sustenido",
+      "flat": "bemol",
+      "permissionDenied": "Acesso ao microfone negado. Por favor, permita o acesso ao microfone para usar o detector de afinação.",
+      "clickToStart": "Clique em \"Iniciar\" para começar a detecção de afinação",
+      "helpText": "Cante ou toque uma nota e veja sua afinação em tempo real. A linha verde mostra a afinação alvo.",
+      "target": "Alvo"
+    }
   }
 }
