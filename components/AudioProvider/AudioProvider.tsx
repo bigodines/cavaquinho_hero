@@ -13,6 +13,7 @@ interface AudioContextValue {
   stopDrone: () => void;
   setDroneVolume: (volume: number) => void;
   isDronePlaying: boolean;
+  droneFrequency: number | null;
   stopAll: () => void;
 }
 
@@ -37,6 +38,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const droneVolumeRef = useRef(0.2);
   const activeOscillatorsRef = useRef<OscillatorNode[]>([]);
   const [isDronePlaying, setIsDronePlaying] = useState(false);
+  const [droneFrequency, setDroneFrequency] = useState<number | null>(null);
 
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
@@ -193,6 +195,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     oscillator.start();
     droneOscillatorRef.current = oscillator;
     droneGainRef.current = gainNode;
+    setDroneFrequency(frequency);
     setIsDronePlaying(true);
   }, [getAudioContext]);
 
@@ -218,6 +221,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
         }
       }, 500);
     }
+    setDroneFrequency(null);
     setIsDronePlaying(false);
   }, [getAudioContext]);
 
@@ -243,6 +247,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     stopDrone,
     setDroneVolume,
     isDronePlaying,
+    droneFrequency,
     stopAll,
   };
 

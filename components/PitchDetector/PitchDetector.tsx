@@ -97,7 +97,7 @@ function autoCorrelate(buffer: Float32Array, sampleRate: number): number {
     correlation = 1 - correlation / MAX_SAMPLES;
     correlations[offset] = correlation;
 
-    if (correlation > 0.9 && correlation > lastCorrelation) {
+    if (correlation > 0.82 && correlation > lastCorrelation) {
       foundGoodCorrelation = true;
       if (correlation > bestCorrelation) {
         bestCorrelation = correlation;
@@ -150,7 +150,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
   const [permissionDenied, setPermissionDenied] = useState(false);
   const centerFrequencyRef = useRef<number>(getNoteFrequency(targetNote || 'C', targetOctave || 3));
 
-  const { isDronePlaying, setDroneVolume } = useAudio();
+  const { isDronePlaying, droneFrequency, setDroneVolume } = useAudio();
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -170,31 +170,47 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          echoCancellation: { ideal: true },
-          noiseSuppression: { ideal: true },
-          autoGainControl: { ideal: false },
-          channelCount: { ideal: 1 },
+          echoCancellation: true,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 1,
         },
       });
       mediaStreamRef.current = stream;
 
       audioContextRef.current = new AudioContext();
       analyserRef.current = audioContextRef.current.createAnalyser();
-      analyserRef.current.fftSize = 2048;
+      analyserRef.current.fftSize = 4096;
       analyserRef.current.smoothingTimeConstant = 0.15;
 
       const source = audioContextRef.current.createMediaStreamSource(stream);
       const highPass = audioContextRef.current.createBiquadFilter();
       highPass.type = 'highpass';
-      highPass.frequency.setValueAtTime(70, audioContextRef.current.currentTime);
+      highPass.frequency.setValueAtTime(60, audioContextRef.current.currentTime);
 
       const lowPass = audioContextRef.current.createBiquadFilter();
       lowPass.type = 'lowpass';
       lowPass.frequency.setValueAtTime(1000, audioContextRef.current.currentTime);
 
+      // Build input chain and notch-out active drone partials when drone is playing
       source.connect(highPass);
       highPass.connect(lowPass);
-      lowPass.connect(analyserRef.current);
+
+      let inputNode: AudioNode = lowPass;
+      if (isDronePlaying && droneFrequency) {
+        [droneFrequency, droneFrequency * 2].forEach((freq) => {
+          if (freq > 45 && freq < 1600) {
+            const notch = audioContextRef.current!.createBiquadFilter();
+            notch.type = 'notch';
+            notch.frequency.setValueAtTime(freq, audioContextRef.current!.currentTime);
+            notch.Q.setValueAtTime(18, audioContextRef.current!.currentTime);
+            inputNode.connect(notch);
+            inputNode = notch;
+          }
+        });
+      }
+
+      inputNode.connect(analyserRef.current);
 
       setIsListening(true);
       setPermissionDenied(false);
@@ -203,7 +219,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
       console.error('Error accessing microphone:', err);
       setPermissionDenied(true);
     }
-  }, []);
+  }, [droneFrequency, isDronePlaying]);
 
   const stopListening = useCallback(() => {
     if (animationFrameRef.current) {
@@ -243,7 +259,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
 
     if (frequency > 0) {
       // Keep only a practical singing/instrument range to avoid unstable subharmonics/noise
-      if (frequency < 70 || frequency > 1000) {
+      if (frequency < 60 || frequency > 1000) {
         animationFrameRef.current = requestAnimationFrame(detectPitch);
         return;
       }
@@ -262,7 +278,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
 
       // Reject sudden octave-like jumps unless they persist for a few frames
       const jumpInSemitones = Math.abs(12 * Math.log2(medianFrequency / previousSmoothed));
-      if (jumpInSemitones > 2.5) {
+      if (jumpInSemitones > 3.0) {
         const pending = pendingJumpFrequencyRef.current;
         if (!pending) {
           pendingJumpFrequencyRef.current = medianFrequency;
@@ -272,7 +288,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
           const pendingJumpDiff = Math.abs(12 * Math.log2(medianFrequency / pending));
           if (pendingJumpDiff < 0.75) {
             pendingJumpFramesRef.current += 1;
-            if (pendingJumpFramesRef.current >= 3) {
+            if (pendingJumpFramesRef.current >= 2) {
               candidateFrequency = medianFrequency;
               pendingJumpFrequencyRef.current = null;
               pendingJumpFramesRef.current = 0;
@@ -291,7 +307,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
       }
 
       // Exponential smoothing to make the indicator stable
-      const smoothingFactor = 0.22;
+      const smoothingFactor = 0.2;
       const smoothedFrequency = previousSmoothed + smoothingFactor * (candidateFrequency - previousSmoothed);
       smoothedFrequencyRef.current = smoothedFrequency;
 
@@ -302,7 +318,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
       setCurrentCents(cents);
 
       // Adapt graph center to voice pitch to avoid fixed-C view
-      centerFrequencyRef.current = (centerFrequencyRef.current * 0.9) + (smoothedFrequency * 0.1);
+      centerFrequencyRef.current = (centerFrequencyRef.current * 0.96) + (smoothedFrequency * 0.04);
 
       // Add to history
       const entry: PitchHistoryEntry = {
@@ -315,7 +331,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
 
       setPitchHistory(prev => {
         const now = Date.now();
-        const timeWindow = 8000;
+        const timeWindow = 5000;
         // Filter out old entries and add new one
         const recentHistory = prev.filter(e => (now - e.timestamp) <= timeWindow);
         return [...recentHistory, entry];
@@ -351,7 +367,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
         80,
         Math.min(
           900,
-          currentFrequency || targetFrequency || centerFrequencyRef.current || getNoteFrequency('C', 3)
+          targetFrequency || centerFrequencyRef.current || getNoteFrequency('C', 3)
         )
       );
       const halfRangeSemitones = 7;
@@ -414,7 +430,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
       // Draw pitch history
       if (pitchHistory.length > 1) {
         const now = Date.now();
-        const timeWindow = 8000; // 8 seconds
+        const timeWindow = 5000; // 5 seconds
         
         // Filter valid entries within time window
         const validEntries = pitchHistory.filter(entry => (now - entry.timestamp) <= timeWindow);
@@ -522,7 +538,7 @@ export default function PitchDetector({ targetNote, targetOctave, onPitchDetecte
     
     const cleanupInterval = setInterval(() => {
       const now = Date.now();
-      const timeWindow = 8000;
+      const timeWindow = 5000;
       setPitchHistory(prev => prev.filter(entry => (now - entry.timestamp) <= timeWindow));
     }, 500); // Clean up every 500ms
 
