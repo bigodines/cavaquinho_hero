@@ -2,6 +2,7 @@
   "header": {
     "chords": "Acordes",
     "harmonicField": "Campo Harmônico",
+    "earTraining": "Treino Auditivo",
     "about": "Sobre"
   },
   "home": {
@@ -16,6 +17,10 @@
     "harmonicField": {
       "title": "Campo Harmônico",
       "description": "Explore os acordes diatônicos, dominantes secundários, II cadenciais e substituições de qualquer tonalidade."
+    },
+    "earTraining": {
+      "title": "Treino Auditivo",
+      "description": "Programa estruturado de 12 semanas para desenvolver seu ouvido musical com drones, afinação e reconhecimento de intervalos."
     },
     "footer": "Feito com ♥ para músicos(as) e futuros músicos(as)"
   },
@@ -79,5 +84,71 @@
     "tip": "Dica",
     "tipText": "Use os dominantes secundários para criar tensão harmônica antes de resolver em qualquer acorde do campo. O SubV é o substituto tritonal do dominante e pode ser usado para adicionar cor às suas progressões.",
     "emptyState": "Digite uma nota acima para explorar o campo harmônico",
-    "emptyStateTip": "Dica: Digite \"Am\" para ver automaticamente o campo menor de Lá"  }
+    "emptyStateTip": "Dica: Digite \"Am\" para ver automaticamente o campo menor de Lá"
+  },
+  "earTraining": {
+    "title": "Treino Auditivo",
+    "subtitle": "Programa de 12 semanas para desenvolver seu ouvido musical",
+    "droneControl": "Drone e Controle de Altura",
+    "key": "Tom",
+    "octave": "Oitava",
+    "waveform": "Forma de Onda",
+    "sine": "Senoidal",
+    "triangle": "Triangular",
+    "square": "Quadrada",
+    "startDrone": "Iniciar Drone",
+    "stopDrone": "Parar Drone",
+    "playDegrees": "Tocar Graus da Escala",
+    "playChords": "Tocar Acordes",
+    "majorTriad": "Maior",
+    "minorTriad": "Menor",
+    "week": "Semana",
+    "currentWeek": "Semana Atual",
+    "minutes": "min",
+    "block": "Bloco",
+    "blocks": "blocos",
+    "tips": "Dicas",
+    "markDayComplete": "Marcar Dia Completo",
+    "dayStreak": "Dias Seguidos",
+    "daysCompleted": "Dias Completados",
+    "hoursTotal": "Horas Totais",
+    "minutesTotal": "Minutos Totais",
+    "currentWeekProgress": "Progresso Semanal",
+    "settings": "Configurações",
+    "practice": "Prática de Hoje",
+    "practiceTools": "Ferramentas de Prática",
+    "program": "Programa Completo",
+    "strudelPatterns": "Padrões Strudel",
+    "todaysFocus": "Foco de Hoje",
+    "fullProgram": "Programa de 12 Semanas de Treino Auditivo",
+    "programDescription": "Uma abordagem estruturada para desenvolver precisão de afinação, ancoragem tonal e tocar de ouvido.",
+    "strudelIntegration": "Integração com Strudel",
+    "strudelDescription": "Use esses padrões no Strudel para praticar treino auditivo com live coding.",
+    "dronePatternTitle": "Padrão de Drone",
+    "dronePatternDesc": "Uma nota sustentada para exercícios de afinação.",
+    "degreesPatternTitle": "Graus da Escala (1-3-5-8)",
+    "degreesPatternDesc": "Pratique cantar e reconhecer os graus básicos da escala.",
+    "majorMinorPatternTitle": "Tríades Maiores vs Menores",
+    "majorMinorPatternDesc": "Compare as qualidades de acordes maiores e menores.",
+    "openInStrudel": "Abrir no Strudel",
+    "tip": "Dica",
+    "strudelTip": "Visite strudel.cc para experimentar esses padrões. Você pode modificar as notas e tempos para atender suas necessidades de prática!",
+    "settingsDescription": "Configure suas preferências de treino auditivo.",
+    "preferredKey": "Tom Preferido",
+    "dangerZone": "Zona de Perigo",
+    "resetProgress": "Resetar Todo o Progresso",
+    "close": "Fechar",
+    "pitchDetector": {
+      "title": "Detector de Afinação",
+      "start": "Iniciar",
+      "stop": "Parar",
+      "inTune": "Afinado",
+      "sharp": "sustenido",
+      "flat": "bemol",
+      "permissionDenied": "Acesso ao microfone negado. Por favor, permita o acesso ao microfone para usar o detector de afinação.",
+      "clickToStart": "Clique em \"Iniciar\" para começar a detecção de afinação",
+      "helpText": "Cante ou toque uma nota e veja sua afinação em tempo real. A linha verde mostra a afinação alvo.",
+      "target": "Alvo"
+    }
+  }
 }

@@ -15,6 +15,7 @@ import Link from 'next/link';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import PianoIcon from '@mui/icons-material/Piano';
+import HearingIcon from '@mui/icons-material/Hearing';
 import { useTranslations, useLocale } from 'next-intl';
 
 interface FeatureCardProps {
@@ -136,7 +137,7 @@ export default function Home() {
         </Typography>
         
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <FeatureCard
               icon={<PianoIcon sx={{ fontSize: 32 }} />}
               title={t('chordGenerator.title')}
@@ -144,12 +145,20 @@ export default function Home() {
               href={`/${locale}/chords`}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <FeatureCard
               icon={<LibraryMusicIcon sx={{ fontSize: 32 }} />}
               title={t('harmonicField.title')}
               description={t('harmonicField.description')}
               href={`/${locale}/harmonic_field`}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <FeatureCard
+              icon={<HearingIcon sx={{ fontSize: 32 }} />}
+              title={t('earTraining.title')}
+              description={t('earTraining.description')}
+              href={`/${locale}/ear-training`}
             />
           </Grid>
         </Grid>
