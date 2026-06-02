@@ -99,4 +99,4 @@ npm test -- --watch  # Run tests in watch mode
 
 ## License
 
-MIT
+AGPL
